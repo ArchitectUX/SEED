@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEED — Brand System</title>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E0E0D;--bg2:#161614;--bg3:#1E1E1B;--bg4:#252522;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#E8E6DF;--text2:#9E9C94;--text3:#5A5852;
+  --accent:#E8E6DF;--accent2:rgba(255,255,255,0.08);--accent3:rgba(255,255,255,0.08);
+  --teal:#9E9C94;--amber:#9E9C94;--purple:#9E9C94;--red:#9E9C94;--coral:#9E9C94;
+  --sidebar:240px;--header:52px;
+  --mono:'Inter','Courier New',monospace;
+  --sans:'Inter',ui-sans-serif,-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+  --r:8px;--rl:12px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;overflow:hidden}
+.app{display:grid;grid-template-columns:var(--sidebar) 1fr;height:100vh}
+/* HEADER */
+.header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--border);background:var(--bg);gap:14px;z-index:10;height:var(--header);flex-shrink:0}
+.logo{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:0.14em;color:var(--text)}
+.hsep{display:none}
+.brand-btn{display:flex;align-items:center;gap:7px;cursor:pointer;padding:5px 10px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);transition:border-color 0.15s}
+.brand-btn:hover{border-color:var(--border2)}
+.bdot{width:6px;height:6px;border-radius:50%;background:var(--text2);flex-shrink:0}
+.bname{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.hright{margin-left:auto;display:flex;align-items:center;gap:8px}
+.spill{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:12px;border:1px solid var(--border);color:var(--text3)}
+.spill.on{border-color:var(--border2);color:var(--text);background:var(--bg3)}
+/* SIDEBAR TOGGLE */
+.sidebar-toggle{background:none;border:none;color:var(--text3);cursor:pointer;padding:6px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;transition:color 0.15s,background 0.15s;flex-shrink:0}
+.sidebar-toggle:hover{color:var(--text);background:var(--bg2)}
+.sidebar-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0}
+.sidebar-brand{display:flex;align-items:center;gap:8px;padding:10px 20px 12px;cursor:pointer;transition:opacity 0.15s}
+.sidebar-brand:hover{opacity:0.8}
+.app.sidebar-collapsed{grid-template-columns:0 1fr}
+.app.sidebar-collapsed .sidebar{transform:translateX(-100%);position:absolute;pointer-events:none}
+.sidebar{transition:transform 0.25s ease}
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;height:100vh}
+.sidebar::-webkit-scrollbar{width:0}
+.sidebar-resizer{width:4px;background:transparent;cursor:col-resize;position:absolute;top:0;right:0;bottom:0;z-index:30;transition:background 0.15s}
+.sidebar-resizer:hover,.sidebar-resizer.dragging{background:var(--border2)}
+.sidebar{position:relative;}
+.ns{padding:6px 20px 3px;font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase}
+.ns-sec{margin-bottom:4px}
+.ni-top{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;color:var(--text2);transition:color 0.15s;position:relative;margin-bottom:4px}
+.ni-top:hover{color:var(--text)}
+.ni-top.act{color:var(--text)}
+.ni-top.act::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--text2)}
+.ns-head{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;color:var(--text2);transition:color 0.15s}
+.ns-head:hover{color:var(--text)}
+.ns-head svg{flex-shrink:0;width:16px;height:16px}
+.ns-label{font-size:14px;font-weight:500;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ns-chev{display:none}
+
+.ns-items{overflow:hidden;transition:max-height 0.25s ease;border-left:1px solid var(--border);margin-left:30px;margin-top:2px;margin-bottom:6px}
+.hover-items{max-height:0;overflow:hidden}
+.ns-items .ni{padding:7px 16px}
+.ns-items .ni .nn{display:none}
+.ns-sec.collapsed .ns-items{max-height:0!important}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 20px;cursor:pointer;transition:background 0.1s;position:relative}
+.ni:hover{background:var(--bg3)}
+.ni.act{background:var(--bg3)}
+.ni.act::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--text2)}
+.nn{font-family:var(--mono);font-size:9px;color:var(--text3);width:16px;flex-shrink:0}
+.ni.act .nn{color:var(--text2)}
+.nl{font-size:13px;color:var(--text2);flex:1;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ni.act .nl{color:var(--text);font-weight:500}
+.ndot{width:5px;height:5px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);flex-shrink:0}
+.ndot.done{background:var(--text2);border-color:var(--text2)}
+.ndiv{height:1px;background:var(--border);margin:8px 20px}
+/* MAIN */
+.main-wrap{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.main{overflow-y:auto;background:var(--bg);flex:1}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+/* STAGES */
+.stage{display:none;padding:36px 44px;animation:fi 0.2s ease}
+.stage.act{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
+.stitle{font-size:26px;font-weight:300;color:var(--text);line-height:1.2;margin-bottom:10px}
+.stitle strong{font-weight:500;color:var(--accent)}
+.sdesc{font-size:13px;color:var(--text2);line-height:1.7;max-width:520px;margin-bottom:28px}
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:14px;overflow:hidden}
+.clabel{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
+/* FIELDS */
+.fl{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;display:block;margin-bottom:5px}
+input[type=text],textarea,select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--sans);font-size:12px;padding:8px 11px;outline:none;transition:border-color 0.15s;resize:vertical;box-sizing:border-box;display:block}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--border2)}
+textarea{min-height:72px}
+select option{background:var(--bg3)}
+.field{margin-bottom:14px}
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:var(--sans);padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.15s}
+.btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent3)}
+.btn-p{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:500}
+.btn-p:hover{background:var(--text2);color:var(--bg);border-color:var(--text2)}
+.actions{display:flex;gap:8px;margin-top:16px}
+/* PATTERN GRID */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all 0.15s}
+.pc:hover{border-color:var(--border2)}
+.pc.sel{border-color:var(--border2);background:var(--bg3)}
+.pct{font-size:11px;font-weight:500;color:var(--text);margin-bottom:2px}
+.pcs{font-size:10px;color:var(--text3);margin-bottom:6px}
+.pcv{font-family:var(--mono);font-size:10px;color:var(--text2)}
+.pc.sel .pcv{color:var(--text)}
+/* DASHBOARD */
+.dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.dm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.dml{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.dmv{font-size:20px;font-weight:300;color:var(--text);font-family:var(--mono)}
+.stagelist{border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.sr{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s}
+.sr:last-child{border-bottom:none}
+.sr:hover{background:var(--bg2)}
+.srn{font-family:var(--mono);font-size:9px;color:var(--text3);width:18px}
+.srm{flex:1}
+.srt{font-size:12px;font-weight:500;color:var(--text)}
+.srs{font-size:10px;color:var(--text3)}
+.srst{font-family:var(--mono);font-size:9px}
+/* POLES */
+.poles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pole{border:1px solid var(--border);border-radius:var(--rl);padding:14px;overflow:hidden}
+.pole-o{border-color:rgba(255,255,255,0.13)}
+.pole-c{border-color:rgba(255,255,255,0.13)}
+/* SCOPE */
+.scgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.scc{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);cursor:pointer;transition:all 0.15s}
+.scc:hover{border-color:var(--border2)}
+.scc.has{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.1)}
+.scc.miss{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.08)}
+.sctog{width:14px;height:14px;border-radius:50%;border:1px solid var(--border2);background:var(--bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all 0.15s}
+.scc.has .sctog{background:rgba(255,255,255,0.1);border-color:#9E9C94;color:#9E9C94}
+.scc.miss .sctog{background:rgba(255,255,255,0.08);border-color:#5A5852;color:#5A5852}
+.scl{font-size:11px;color:var(--text2);flex:1}
+.scresult{border-radius:var(--r);padding:10px 14px;font-size:11px;line-height:1.5;background:var(--bg2);border:1px solid var(--border)}
+/* GTM QUADRANTS */
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.qc{border:1px solid var(--border);border-radius:var(--rl);padding:13px;cursor:pointer;transition:all 0.15s}
+.qc:hover{border-color:var(--border2)}
+.qc.sel{border-width:1.5px}
+/* VECTORS */
+.vc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.vctop{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.vcnum{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.vcni{flex:1;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:12px;font-weight:500;padding:2px 0;outline:none}
+.vcp{width:76px;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text3);font-family:var(--mono);font-size:9px;padding:2px 0;outline:none;text-align:right}
+.vcrm{font-size:9px;color:var(--text3);cursor:pointer;padding:2px 5px;border-radius:3px}
+.vcrm:hover{color:var(--text2)}
+.vcarc{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.vff{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:10px;font-weight:500;padding:2px 8px;width:100px;outline:none;font-family:var(--sans)}
+.vft{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--text2);font-size:10px;font-weight:500;padding:2px 8px;width:100px;outline:none;font-family:var(--sans)}
+.varl{flex:1;height:1px;background:var(--border2)}
+.vint{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text2);font-size:11px;padding:2px 0;outline:none}
+/* GANTT */
+.gantt-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px;overflow-x:auto;margin-bottom:14px}
+/* STAGE 7-8 VEC LIST */
+.vlist{border-right:1px solid var(--border);overflow-y:auto;background:var(--bg2)}
+.vlist::-webkit-scrollbar{width:0}
+.vll{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;padding:10px 12px 4px}
+.vi{padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.1s}
+.vi:hover{background:var(--bg3)}
+.vi.act{background:var(--accent3);border-left:2px solid var(--accent)}
+.vin{font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:2px}
+.vi.act .vin{color:var(--accent)}
+.vim{font-size:11px;font-weight:500;color:var(--text);margin-bottom:3px}
+.vi.act .vim{color:var(--accent)}
+.viarc{display:flex;align-items:center;gap:4px}
+.viff{font-size:9px;font-weight:500;padding:1px 5px;border-radius:3px;background:var(--bg3);border:1px solid var(--border);color:var(--text2)}
+.vift{font-size:9px;font-weight:500;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.1);color:var(--text2)}
+.viper{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:2px}
+/* SPLIT LAYOUT */
+.split{display:grid;grid-template-columns:180px 1fr;height:520px;border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:14px}
+.splitright{overflow-y:auto}
+.splitright::-webkit-scrollbar{width:3px}
+.splitright::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.emptysel{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3)}
+.emptynum{font-family:var(--mono);font-size:28px;opacity:0.2}
+/* BRIEF */
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bcell{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px}
+.bcl{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.bcell textarea{min-height:60px}
+/* TRUTH */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.tc{border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;cursor:pointer;transition:all 0.15s}
+.tc:hover{border-color:var(--border2);background:var(--bg2)}
+.tc.sel{border-color:rgba(255,255,255,0.2);background:var(--accent3)}
+.tcl{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;color:var(--text3);text-transform:uppercase;margin-bottom:2px}
+.tc.sel .tcl{color:var(--text)}
+.tcb{font-size:10px;color:var(--text2);line-height:1.4}
+.tc.sel .tcb{color:var(--text2)}
+/* MECHANIC */
+.mechbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:12px 14px;min-height:52px;margin-bottom:12px}
+.mbt{font-size:11px;font-weight:500;color:var(--text);margin-bottom:3px}
+.mbb{font-size:11px;color:var(--text2);line-height:1.5}
+/* AUDIT */
+.auditbox{border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.arow{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s}
+.arow:last-child{border-bottom:none}
+.arow:hover{background:var(--bg2)}
+.ach{width:16px;height:16px;border-radius:50%;border:1px solid var(--border2);background:var(--bg3);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all 0.15s}
+.ach.pass{background:rgba(255,255,255,0.1);border-color:var(--text2);color:var(--text2)}
+.ach.fail{background:rgba(255,255,255,0.08);border-color:var(--text2);color:var(--text2)}
+.aq{font-size:11px;color:var(--text2);flex:1;line-height:1.4}
+.asub{font-size:9px;color:var(--text3);margin-top:1px}
+.afoot{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg2);border-top:1px solid var(--border)}
+.ar{font-family:var(--mono);font-size:9px;color:var(--text3)}
+.ar.pass{color:var(--text2)}
+.ar.fail{color:var(--text2)}
+/* LAYER CARDS */
+.layer{border-radius:var(--rl);overflow:hidden;margin-bottom:8px;border:1px solid var(--border)}
+.layerhead{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.lhn{font-family:var(--mono);font-size:10px;font-weight:500;flex-shrink:0}
+.lht{flex:1}
+.lhti{font-size:12px;font-weight:500;margin-bottom:1px}
+.lhs{font-size:10px;opacity:0.75}
+.ltog{font-size:10px;opacity:0.5;flex-shrink:0;transition:transform 0.15s}
+.layerbody{display:none;padding:0 12px 12px;background:var(--bg)}
+.layerbody.open{display:block}
+.lnote{font-size:11px;color:var(--text2);line-height:1.5;margin:10px 0 8px}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tag{font-size:9px;padding:2px 7px;border-radius:10px;border:1px solid var(--border);color:var(--text3);background:var(--bg2)}
+.ccheck{border-radius:var(--r);padding:8px 10px;margin-bottom:6px}
+.ccl{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;font-weight:500}
+.ccb{font-size:10px;line-height:1.5}
+.sbrow{display:flex;gap:6px;margin-top:6px}
+.sb{font-family:var(--mono);font-size:9px;padding:3px 10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all 0.15s}
+.sb:hover{border-color:var(--border2);color:var(--text)}
+.sb.sp{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:var(--text2)}
+.sb.sf{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:var(--text2)}
+.pbar{height:3px;background:var(--bg2);margin-bottom:12px;border-radius:2px;overflow:hidden}
+.pfill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s}
+/* TRIGGER */
+.trigbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:8px}
+.tghead{padding:10px 14px;border-bottom:1px solid var(--border)}
+.tght{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.tghs{font-size:10px;color:var(--text3)}
+.tggrid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.tgc{padding:10px 14px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tgc:nth-child(even){border-right:none}
+.tgc:nth-last-child(-n+2){border-bottom:none}
+.tgcl{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:3px}
+.tgcm{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px}
+.tgcb{font-size:10px;color:var(--text2);line-height:1.4;margin-bottom:6px}
+.tgcin{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:11px;padding:5px 8px;outline:none}
+.tgstatus{display:flex;align-items:center;justify-content:space-between;padding:9px 14px}
+.tgsl{font-family:var(--mono);font-size:9px;color:var(--text3)}
+.tgsl.all{color:var(--text)}.tgsl.some{color:var(--text2)}
+.chkbtns{display:flex;gap:6px}
+.chkbtn{font-family:var(--mono);font-size:9px;padding:3px 10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all 0.15s}
+.chkbtn:hover{border-color:var(--border2);color:var(--text)}
+.chkbtn.met{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:var(--text2)}
+.chkbtn.notmet{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:var(--text2)}
+.diagbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:8px}
+.diagrow{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border)}
+.diagrow:last-child{border-bottom:none}
+.diagcond{font-family:var(--mono);font-size:9px;font-weight:500;color:var(--text3);min-width:88px;flex-shrink:0;padding-top:1px}
+.diagfix{font-size:10px;color:var(--text2);line-height:1.4;flex:1}
+.p2box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:8px;opacity:0.35;pointer-events:none;transition:opacity 0.3s}
+.p2box.unlocked{opacity:1;pointer-events:all}
+.p2head{padding:10px 14px;border-bottom:1px solid var(--border)}
+.p2ht{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.p2hs{font-size:10px;color:var(--text3)}
+.p2grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.p2c{padding:10px 12px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.p2c:nth-child(3n){border-right:none}
+.p2c:nth-last-child(-n+3){border-bottom:none}
+.p2cl{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;color:var(--text3);text-transform:uppercase;margin-bottom:3px}
+.p2cw{font-size:9px;color:var(--text3);text-decoration:line-through;margin-bottom:2px}
+.p2cn{font-size:11px;font-weight:500;color:var(--text);margin-bottom:3px}
+.p2cb{font-size:10px;color:var(--text2);line-height:1.4}
+.p2foot{padding:9px 14px;background:var(--bg3);border-top:1px solid var(--border)}
+.p2ft{font-size:10px;color:var(--text2);font-weight:500}
+/* CADENCE */
+.cadgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.cadcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.cadhead{padding:9px 12px;border-bottom:1px solid var(--border)}
+.cadint{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:2px}
+.cadti{font-size:12px;font-weight:500;color:var(--text)}
+.cadbody{padding:10px 12px}
+.caddesc{font-size:10px;color:var(--text2);line-height:1.5;margin-bottom:7px}
+.caditems{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.caditem{display:flex;align-items:flex-start;gap:5px;font-size:10px;color:var(--text2)}
+.caddot{width:3px;height:3px;border-radius:50%;background:var(--text3);flex-shrink:0;margin-top:5px}
+/* LOOP */
+.loopbox{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:8px}
+.loophead{padding:10px 14px;border-bottom:1px solid var(--border)}
+.loopht{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.loophs{font-size:10px;color:var(--text3)}
+.loopgrid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.lc{padding:11px 13px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.lc:nth-child(even){border-right:none}
+.lc:nth-last-child(-n+2){border-bottom:none}
+.lcl{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;color:var(--text3);text-transform:uppercase;margin-bottom:3px}
+.lct{font-size:11px;font-weight:500;color:var(--text);margin-bottom:3px}
+.lcb{font-size:10px;color:var(--text2);line-height:1.4}
+.loopfoot{padding:9px 14px;background:var(--bg3);border-top:1px solid var(--border)}
+.loopft{font-size:10px;color:var(--text2);font-weight:500}
+.learncell{display:grid;grid-template-columns:130px 1fr;gap:8px;margin-bottom:8px;align-items:start}
+.learnlabel{font-family:var(--mono);font-size:9px;color:var(--text3);padding-top:8px}
+.crem{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:12px 14px;margin-bottom:14px;display:flex;gap:12px}
+.cremicon{font-family:var(--mono);font-size:16px;color:var(--text2);flex-shrink:0}
+.cremt{font-size:11px;font-weight:500;color:var(--text);margin-bottom:3px}
+.cremb{font-size:10px;color:var(--text3);line-height:1.5}
+.completebox{background:var(--accent3);border:1px solid rgba(255,255,255,0.1);border-radius:var(--rl);padding:20px;text-align:center;margin-top:16px}
+.complet{font-size:18px;font-weight:500;color:var(--text);margin-bottom:6px}
+.compleb{font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:14px}
+/* SECLABEL */
+.sl{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;margin-top:20px;display:flex;align-items:center;gap:8px}
+.sl:first-child{margin-top:0}
+.sl::after{content:'';flex:1;height:1px;background:var(--border)}
+.arr{text-align:center;font-size:12px;color:var(--text3);padding:4px 0}
+.decrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.deccell{border-radius:var(--rl);padding:12px}
+.declabel{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;font-weight:500}
+.dectitle{font-size:12px;font-weight:500;margin-bottom:3px}
+.decbody{font-size:10px;line-height:1.5}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:24px;width:380px;max-width:90vw}
+.modal-title{font-size:15px;font-weight:500;margin-bottom:4px}
+.modal-sub{font-size:11px;color:var(--text3);margin-bottom:16px}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+/* CONSTRAINT BAR */
+.cbar{display:flex;gap:20px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px}
+.cbitem{display:flex;flex-direction:column;gap:2px}
+.cblabel{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase}
+.cbval{font-size:11px;color:var(--text)}
+/* VEC CARD IN CHAIN */
+.veccard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:12px 14px;margin-bottom:6px}
+.vctop2{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vcnum2{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.vcname2{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.vcper{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.vcarc2{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.arcline{flex:1;height:1px;background:var(--border2)}
+.vcint{font-size:11px;color:var(--text2)}
+.s8chain{padding:16px}
+/* PROGRESS BAR */
+.progbar{height:2px;background:var(--bg2);margin-bottom:10px;border-radius:2px;overflow:hidden}
+.progfill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s}
+/* PILLBAR */
+.pillbar{display:flex;gap:16px;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px}
+.pillit{display:flex;flex-direction:column;gap:1px}
+.pillil{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase}
+.pilliv{font-size:10px;color:var(--text)}
+/* Output cards */
+.output-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.output-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;cursor:pointer;transition:all 0.2s}
+.output-card:hover:not(.locked){border-color:var(--border2)}
+.output-card.locked{opacity:0.4;pointer-events:none}
+.oc-preview{height:160px;background:var(--bg3);position:relative;display:flex;align-items:center;justify-content:center}
+.oc-chip{position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:3px 10px}
+.oc-chip svg{flex-shrink:0}
+.oc-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-top:1px solid var(--border)}
+.oc-title{font-size:13px;font-weight:500;color:var(--text)}
+.oc-arrow{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);transition:all 0.15s;flex-shrink:0}
+.output-card:hover:not(.locked) .oc-arrow{border-color:var(--border2);color:var(--text)}
+/* Progress */
+.q-progress{display:flex;align-items:center;gap:0;margin-bottom:36px}
+.qp-step{display:flex;align-items:center;gap:8px;cursor:pointer;opacity:0.35;transition:opacity 0.2s;pointer-events:none}
+.qp-step.active{opacity:1;pointer-events:all}
+.qp-step.done{opacity:1;pointer-events:all}
+.qp-step.answered{opacity:1;pointer-events:all}
+.qp-sep{flex:1;height:1px;background:var(--border);margin:0 12px;transition:background 0.3s}
+.qp-num{width:24px;height:24px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;color:var(--text3);flex-shrink:0;transition:all 0.2s}
+.qp-step.active .qp-num{border-color:var(--border2);background:transparent;color:var(--text2)}
+.qp-step.answered .qp-num{border-color:var(--text);background:var(--text);color:var(--bg)}
+.qp-step.done .qp-num{border-color:var(--text);background:var(--text);color:var(--bg)}
+.qp-label{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.qp-step.done .qp-label{color:var(--text)}
+/* Question steps */
+.qstep{animation:fi 0.25s ease}
+.q-head{margin-bottom:24px}
+.q-num{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
+.q-title{font-size:18px;font-weight:500;color:var(--text);line-height:1.4;max-width:560px}
+/* Question cards */
+.q-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.qcard{display:flex;align-items:center;gap:16px;padding:16px 18px;border:1px solid var(--border);border-radius:var(--rl);cursor:pointer;transition:all 0.15s;background:var(--bg2)}
+.qcard:hover{border-color:var(--border2)}
+.qcard.picked{border-color:var(--text);background:var(--bg3)}
+.qcard-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.qcard.picked .qcard-icon{border-color:var(--border2);color:var(--text)}
+.qcard-body{flex:1}
+.qcard-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.qcard-desc{font-size:11px;color:var(--text3);line-height:1.5}
+.qcard.picked .qcard-desc{color:var(--text2)}
+.qcard-check{width:18px;height:18px;border-radius:50%;border:1px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.15s}
+.qcard.picked .qcard-check::after{content:"✓";color:var(--text)}
+/* Nav */
+.q-nav{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin-top:24px}
+/* Dropzone */
+.dropzone{border:1px solid var(--border);border-radius:var(--rl);transition:all 0.15s;overflow:hidden;background:var(--bg2)}
+.dropzone.over{border-color:var(--border2);background:var(--bg3)}
+.dz-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px 24px;gap:8px;text-align:center}
+.dz-icon{width:40px;height:40px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text2);margin-bottom:4px}
+.dz-text{font-size:13px;font-weight:500;color:var(--text)}
+.dz-sub{font-size:12px;color:var(--text3)}
+.dz-link{color:var(--text2);text-decoration:underline;cursor:pointer}
+.dz-link:hover{color:var(--text)}
+.dz-formats{display:flex;align-items:center;gap:6px;padding:10px 16px;border-top:1px solid var(--border);background:var(--bg3)}
+.dz-fmt-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;margin-right:4px}
+.dz-fmt-tag{font-family:var(--mono);font-size:9px;color:var(--text2);padding:2px 7px;border:1px solid var(--border);border-radius:4px;background:var(--bg)}
+.file-pill{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)}
+.file-pill-name{font-size:11px;color:var(--text2);flex:1}
+.file-pill-status{font-family:var(--mono);font-size:9px;color:var(--text3)}
+.file-pill-rm{font-size:12px;color:var(--text3);cursor:pointer;padding:0 2px}
+.file-pill-rm:hover{color:var(--text)}
+/* Hover nav */
+.hover-items{max-height:0;overflow:hidden}
+/* Brand fixed bar */
+.brand-fixed-bar{position:fixed;bottom:0;right:0;height:56px;background:var(--bg);border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;padding:0 44px;gap:8px;z-index:50}
+/* Breadcrumb */
+.brand-breadcrumb{font-size:13px;color:var(--text3);cursor:pointer;display:inline-flex;align-items:center;gap:0;padding:5px 0;transition:color 0.15s}
+.brand-breadcrumb:hover{color:var(--text2)}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <!-- Logo + toggle -->
+  <div class="sidebar-top">
+    <span class="logo">SEED</span>
+    <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M6 2v12"/></svg>
+    </button>
+  </div>
+  <!-- Brand selector -->
+  <div class="sidebar-brand" onclick="openModal()">
+    <div class="bdot"></div>
+    <span class="bname" id="brand-display">Set brand</span>
+    <span style="font-size:9px;color:var(--text3)">⌄</span>
+  </div>
+  <div class="ndiv"></div>
+  <!-- Menu label -->
+  <div class="ns" style="padding:12px 20px 6px">Menu</div>
+  <div class="ni-top act" data-s="dash" onclick="go('dash')">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="5" height="5" rx="1"/>
+      <rect x="9" y="2" width="5" height="5" rx="1"/>
+      <rect x="2" y="9" width="5" height="5" rx="1"/>
+      <rect x="9" y="9" width="5" height="5" rx="1"/>
+    </svg>
+    <span class="ns-label">Dashboard</span>
+  </div>
+
+  <div class="ns-sec hover-sec" id="sec-brand" onmouseenter="hoverSec('brand',true)" onmouseleave="hoverSec('brand',false)">
+    <div class="ns-head" onclick="go('s1')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="7" cy="5" r="2.5"/>
+        <path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5"/>
+      </svg>
+      <span class="ns-label">Brand</span>
+    </div>
+    <div class="ns-items hover-items" id="sec-brand-items">
+      <div class="ni" data-s="brand-bb" onclick="go('s1');scrollToCard('brand-bb')"><span class="nl">Brand book</span><div class="ndot" id="nd-brand-bb"></div></div>
+      <div class="ni" data-s="brand-cs" onclick="go('s1');scrollToCard('brand-cs')"><span class="nl">Creative strategy</span><div class="ndot" id="nd-brand-cs"></div></div>
+      <div class="ni" data-s="brand-pd" onclick="go('s1');scrollToCard('brand-pd')"><span class="nl">Positioning deck</span><div class="ndot" id="nd-brand-pd"></div></div>
+    </div>
+  </div>
+
+  <div class="ns-sec" id="sec-launch">
+    <div class="ns-head" onclick="toggleSec('launch')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 1c0 0 3.5 2 3.5 6.5S7 13 7 13 3.5 11 3.5 7.5 7 1 7 1z"/>
+        <circle cx="7" cy="7.5" r="1.2"/>
+      </svg>
+      <span class="ns-label">Launch</span>
+    </div>
+    <div class="ns-items" id="sec-launch-items">
+      <div class="ni" data-s="s4" onclick="go('s4')"><span class="nn">04</span><span class="nl">Scope diagnostic</span><div class="ndot" id="nd-s4"></div></div>
+      <div class="ni" data-s="s5" onclick="go('s5')"><span class="nn">05</span><span class="nl">GTM model</span><div class="ndot" id="nd-s5"></div></div>
+      <div class="ni" data-s="s6" onclick="go('s6')"><span class="nn">06</span><span class="nl">Orchestrate</span><div class="ndot" id="nd-s6"></div></div>
+    </div>
+  </div>
+
+  <div class="ns-sec" id="sec-execute">
+    <div class="ns-head" onclick="toggleSec('execute')">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="3,2 11,7 3,12"/>
+      </svg>
+      <span class="ns-label">Execute</span>
+    </div>
+    <div class="ns-items" id="sec-execute-items">
+      <div class="ni" data-s="s7" onclick="go('s7')"><span class="nn">07</span><span class="nl">Creative production</span><div class="ndot" id="nd-s7"></div></div>
+      <div class="ni" data-s="s8" onclick="go('s8')"><span class="nn">08</span><span class="nl">The brief</span><div class="ndot" id="nd-s8"></div></div>
+      <div class="ni" data-s="s9" onclick="go('s9')"><span class="nn">09</span><span class="nl">Content ecosystem</span><div class="ndot" id="nd-s9"></div></div>
+      <div class="ni" data-s="s10" onclick="go('s10')"><span class="nn">10</span><span class="nl">Scale</span><div class="ndot" id="nd-s10"></div></div>
+      <div class="ni" data-s="s11" onclick="go('s11')"><span class="nn">11</span><span class="nl">Measure and loop</span><div class="ndot" id="nd-s11"></div></div>
+    </div>
+  </div>
+</nav>
+
+<div class="main-wrap">
+<header class="header" id="topbar">
+  <span class="spill" id="sys-status">System incomplete</span>
+</header>
+<main class="main" id="main">
+
+<!-- DASHBOARD -->
+<div class="stage act" id="stage-dash">
+  <div class="eyebrow">SEED — Brand system</div>
+  <div class="stitle">Brand <strong>operating system</strong></div>
+  <div class="sdesc">Define the constraint once. Everything derives from it.</div>
+  <div class="dash-metrics">
+    <div class="dm"><div class="dml">Complete</div><div class="dmv" id="d-complete">0/11</div></div>
+    <div class="dm"><div class="dml">Brand</div><div class="dmv" style="font-size:13px;padding-top:3px" id="d-brand">—</div></div>
+    <div class="dm"><div class="dml">Phase</div><div class="dmv" style="font-size:12px;padding-top:5px" id="d-phase">Brand</div></div>
+  </div>
+  <div class="stagelist" id="dash-list"></div>
+</div>
+
+<!-- S1 -->
+<div class="stage" id="stage-s1">
+  <div class="brand-fixed-bar">
+    <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">&#174; 2026 seedcollaborative.co.uk</span>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="brand-save-btn" onclick="runAnalysis()">Save</button>
+      <button class="btn btn-p" id="brand-complete-btn" onclick="done('s1')" disabled>Mark complete →</button>
+    </div>
+  </div>
+
+  <!-- BRAND HOME -->
+  <div id="brand-home">
+    <div class="brand-breadcrumb" style="margin-bottom:20px;pointer-events:none;opacity:1;color:var(--text2)">Brand <span style="color:var(--text3);margin:0 6px">/</span> <span style="color:var(--text);font-weight:500">Overview</span></div>
+    <div style="margin-bottom:40px">
+      <div class="output-cards" id="output-cards-grid">
+        <div class="output-card locked" id="brand-bb" onclick="openOutput('bb')">
+          <div class="oc-preview"><div class="oc-chip" id="oc-status-bb"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="4" cy="4" r="3"/></svg> Pending</div></div>
+          <div class="oc-footer"><span class="oc-title">Brand book</span><div class="oc-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg></div></div>
+        </div>
+        <div class="output-card locked" id="brand-cs" onclick="openOutput('cs')">
+          <div class="oc-preview"><div class="oc-chip" id="oc-status-cs"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="4" cy="4" r="3"/></svg> Pending</div></div>
+          <div class="oc-footer"><span class="oc-title">Creative strategy</span><div class="oc-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg></div></div>
+        </div>
+        <div class="output-card locked" id="brand-pd" onclick="openOutput('pd')">
+          <div class="oc-preview"><div class="oc-chip" id="oc-status-pd"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="4" cy="4" r="3"/></svg> Pending</div></div>
+          <div class="oc-footer"><span class="oc-title">Positioning deck</span><div class="oc-arrow"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M3 7h8M7 3l4 4-4 4"/></svg></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="q-num" style="margin-bottom:16px">Inputs</div>
+    <div class="stagelist">
+      <div class="sr" onclick="showBrandView('questionnaire')"><span class="srn">01</span><div class="srm"><div class="srt">Questionnaire</div><div class="srs">Three questions that diagnose the brand pattern</div></div><span class="srst" id="q-row-status" style="color:var(--text3)">—</span><span style="font-size:10px;color:var(--text3)">→</span></div>
+      <div class="sr" onclick="showBrandView('session')"><span class="srn">02</span><div class="srm"><div class="srt">Session material</div><div class="srs">Notes and files from the founder session</div></div><span class="srst" id="sm-row-status" style="color:var(--text3)">—</span><span style="font-size:10px;color:var(--text3)">→</span></div>
+    </div>
+    <div id="s1-analysis-result" style="display:none;margin-top:14px"><div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px"><div class="q-num" style="margin-bottom:8px">Analysis</div><div id="s1-analysis-text" style="font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-wrap"></div></div></div>
+  </div>
+
+  <!-- QUESTIONNAIRE VIEW -->
+  <div id="brand-questionnaire" style="display:none">
+    <div class="brand-breadcrumb" onclick="showBrandView('home')">← Brand</div>
+    <div class="eyebrow" style="margin-top:12px">Questionnaire</div>
+    <div class="stitle" style="margin-bottom:32px">Three questions that diagnose the brand pattern</div>
+    <div class="q-progress" id="q-progress">
+      <div class="qp-step active" id="qp1" onclick="jumpQ(1)"><span class="qp-num">1</span><span class="qp-label">Brand personality</span></div>
+      <div class="qp-sep" id="qp-sep-1"></div>
+      <div class="qp-step" id="qp2" onclick="jumpQ(2)"><span class="qp-num">2</span><span class="qp-label">Audience feeling</span></div>
+      <div class="qp-sep" id="qp-sep-2"></div>
+      <div class="qp-step" id="qp3" onclick="jumpQ(3)"><span class="qp-num">3</span><span class="qp-label">Twenty year truth</span></div>
+    </div>
+    <div class="qstep" id="qstep-1">
+      <div class="q-head"><div class="q-num">Question 1 of 3</div><div class="q-title">If your brand was a person at a party, which one would it be?</div></div>
+      <div class="q-cards">
+        <div class="qcard" data-q="1" data-a="A" data-scores='{"static":2}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="1.5" fill="currentColor" stroke="none"/></svg></div><div class="qcard-body"><div class="qcard-title">Unmovable</div><div class="qcard-desc">Stays exactly the same regardless of who they're talking to. Consistent, itself, always.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="1" data-a="B" data-scores='{"co":2,"oco":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M4 16 L16 4"/><path d="M16 4 L10 4 M16 4 L16 10"/></svg></div><div class="qcard-body"><div class="qcard-title">The quiet transformer</div><div class="qcard-desc">Quietly changes how you see something by the end of the conversation.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="1" data-a="C" data-scores='{"oc":2,"threshold":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M10 4 L10 16 M6 8 L10 4 L14 8"/></svg></div><div class="qcard-body"><div class="qcard-title">The one who says it</div><div class="qcard-desc">Says the thing nobody else in the room is willing to say.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="1" data-a="D" data-scores='{"threshold":2,"oc":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M4 10 Q10 4 16 10 Q10 16 4 10"/></svg></div><div class="qcard-body"><div class="qcard-title">Comfortable in chaos</div><div class="qcard-desc">Genuinely at ease when everyone else is looking for the exit.</div></div><div class="qcard-check"></div></div>
+      </div>
+      <div class="q-nav"><button class="btn btn-p" onclick="if(qAnswers[1])advanceQ(1)">Next →</button></div>
+    </div>
+    <div class="qstep" id="qstep-2" style="display:none">
+      <div class="q-head"><div class="q-num">Question 2 of 3</div><div class="q-title">What do you want someone to feel the moment after they've used your product or engaged with your brand?</div></div>
+      <div class="q-cards">
+        <div class="qcard" data-q="2" data-a="A" data-scores='{"co":2,"static":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M5 10 L9 14 L15 6"/></svg></div><div class="qcard-body"><div class="qcard-title">Settled</div><div class="qcard-desc">Like something has been resolved. A door has closed in the best possible way.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="2" data-a="B" data-scores='{"oc":2,"threshold":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M4 10 L16 10 M12 6 L16 10 L12 14"/></svg></div><div class="qcard-body"><div class="qcard-title">Unsettled in a good way</div><div class="qcard-desc">Like something has opened up. A door has opened they didn't know was there.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="2" data-a="C" data-scores='{"co":2,"spiral":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M10 16 L10 4 M6 8 L10 4 L14 8"/></svg></div><div class="qcard-body"><div class="qcard-title">Capable</div><div class="qcard-desc">Like they can now do something they couldn't before. Limitation removed.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="2" data-a="D" data-scores='{"fractal":2,"threshold":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3"/></svg></div><div class="qcard-body"><div class="qcard-title">Seen</div><div class="qcard-desc">Like the brand understands something about them that others don't.</div></div><div class="qcard-check"></div></div>
+      </div>
+      <div class="q-nav"><button class="btn" onclick="showQ(1)">← Back</button><button class="btn btn-p" onclick="if(qAnswers[2])advanceQ(2)">Next →</button></div>
+    </div>
+    <div class="qstep" id="qstep-3" style="display:none">
+      <div class="q-head"><div class="q-num">Question 3 of 3</div><div class="q-title">What would still be true about your brand in twenty years, even if everything else changed?</div></div>
+      <div class="q-cards">
+        <div class="qcard" data-q="3" data-a="A" data-scores='{"static":2}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><rect x="5" y="5" width="10" height="10" rx="1"/></svg></div><div class="qcard-body"><div class="qcard-title">The quality and consistency</div><div class="qcard-desc">We never compromise on the standard. That never changes.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="3" data-a="B" data-scores='{"fractal":2,"co":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="10" cy="10" r="3"/><circle cx="10" cy="10" r="6"/></svg></div><div class="qcard-body"><div class="qcard-title">The belief we're built on</div><div class="qcard-desc">The product will change but the conviction won't.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="3" data-a="C" data-scores='{"oc":2,"threshold":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M5 10 L15 10 M5 6 L15 6"/><circle cx="15" cy="14" r="2"/><path d="M5 14 L13 14"/></svg></div><div class="qcard-body"><div class="qcard-title">The refusal</div><div class="qcard-desc">There will always be something we won't do that others will.</div></div><div class="qcard-check"></div></div>
+        <div class="qcard" data-q="3" data-a="D" data-scores='{"threshold":2,"oco":1}' onclick="pickCard(this)"><div class="qcard-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M4 10 Q7 4 10 10 Q13 16 16 10"/></svg></div><div class="qcard-body"><div class="qcard-title">The tension we hold</div><div class="qcard-desc">We won't resolve something the market wants us to resolve.</div></div><div class="qcard-check"></div></div>
+      </div>
+      <div class="q-nav" id="q3-nav">
+        <button class="btn" id="q3-back-btn" onclick="showQ(2)">← Back</button>
+        <button class="btn btn-p" id="q3-save-btn" style="display:none" onclick="lockQuestionnaire()">Save →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SESSION MATERIAL VIEW -->
+  <div id="brand-session" style="display:none">
+    <div class="brand-breadcrumb" onclick="showBrandView('home')">← Brand</div>
+    <div class="eyebrow" style="margin-top:12px">Session material</div>
+    <div class="stitle" style="margin-bottom:32px">Notes and files from the founder session</div>
+    <textarea id="s1-context" style="min-height:160px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--sans);font-size:12px;padding:10px 12px;outline:none;resize:vertical;box-sizing:border-box;margin-bottom:20px" placeholder="Meeting notes, founder quotes, AI call summaries, observations from the session..." oninput="sv('s1-context');checkBrandComplete()"></textarea>
+    <div class="dropzone" id="s1-dropzone" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
+      <input type="file" id="s1-fileinput" multiple accept=".pdf,.doc,.docx,.txt,.md" style="display:none" onchange="dzFiles(this.files)">
+      <div class="dz-inner">
+        <div class="dz-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><polyline points="13 2 13 8 19 8"/></svg></div>
+        <div class="dz-text">Drag your file here</div>
+        <div class="dz-sub">or <span class="dz-link" onclick="document.getElementById('s1-fileinput').click()">click to upload</span></div>
+      </div>
+      <div class="dz-formats"><span class="dz-fmt-label">Supported formats</span><span class="dz-fmt-tag">PDF</span><span class="dz-fmt-tag">DOC</span><span class="dz-fmt-tag">DOCX</span><span class="dz-fmt-tag">TXT</span><span class="dz-fmt-tag">MD</span></div>
+    </div>
+    <div id="s1-filelist" style="margin-top:12px;display:flex;flex-direction:column;gap:6px"></div>
+    <div class="q-nav" style="margin-top:24px"><button class="btn btn-p" onclick="showBrandView('home')">Done →</button></div>
+  </div>
+
+</div>
+
+<!-- S4 -->
+<div class="stage" id="stage-s4">
+  <div class="eyebrow">Step 04 — Launch</div>
+  <div class="stitle">Scope <strong>diagnostic</strong></div>
+  <div class="sdesc">Map what exists. Establish where the engagement starts. Toggle each component to reflect what the client currently has.</div>
+  <div class="scgrid">
+    <div class="scc" data-k="sc-constraint" onclick="togScope(this)"><span class="scl">The constraint</span><div class="sctog"></div></div>
+    <div class="scc" data-k="sc-brandbook" onclick="togScope(this)"><span class="scl">Brand book</span><div class="sctog"></div></div>
+    <div class="scc" data-k="sc-creativestrat" onclick="togScope(this)"><span class="scl">Creative strategy</span><div class="sctog"></div></div>
+    <div class="scc" data-k="sc-positioning" onclick="togScope(this)"><span class="scl">Positioning deck</span><div class="sctog"></div></div>
+    <div class="scc" data-k="sc-gtmdeck" onclick="togScope(this)"><span class="scl">GTM strategy deck</span><div class="sctog"></div></div>
+    <div class="scc" data-k="sc-paid" onclick="togScope(this)"><span class="scl">Paid media strategy</span><div class="sctog"></div></div>
+    <div class="scc" data-k="sc-creative" onclick="togScope(this)"><span class="scl">Creative production</span><div class="sctog"></div></div>
+    <div class="scc" data-k="sc-channel" onclick="togScope(this)"><span class="scl">Channel strategy</span><div class="sctog"></div></div>
+  </div>
+  <div class="scresult" id="sc-result"><span style="font-size:11px;color:var(--text3)">Toggle components above to generate the diagnostic.</span></div>
+  <div class="card" style="margin-top:12px"><div class="clabel">Notes</div><textarea id="s4-notes" placeholder="What did you observe? Is the client a good fit for the methodology..." oninput="sv('s4-notes')"></textarea></div>
+  <div class="actions"><button class="btn" onclick="go('s1')">← Back</button><button class="btn btn-p" onclick="done('s4')">Mark complete →</button></div>
+</div>
+
+<!-- S5 -->
+<div class="stage" id="stage-s5">
+  <div class="eyebrow">Step 05 — Launch</div>
+  <div class="stitle">GTM <strong>model</strong></div>
+  <div class="sdesc">Budget and risk appetite determine the GTM configuration. Select the quadrant — product strategy follows.</div>
+  <div class="qgrid">
+    <div class="qc" data-q="tl" onclick="selQuad(this)" style="border-color:var(--border2)"><div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:3px">Controlled scale</div><div style="font-size:10px;color:var(--text3);margin-bottom:8px">High budget · Low risk</div><div style="font-size:10px;color:var(--text3);line-height:1.7">Paid phased · Full creative suite · Multi-channel · Slow launch · Hero + 2–3 SKUs · MOQ then test</div></div>
+    <div class="qc" data-q="tr" onclick="selQuad(this)" style="border-color:var(--border2)"><div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:3px">Full launch</div><div style="font-size:10px;color:var(--text3);margin-bottom:8px">High budget · High risk</div><div style="font-size:10px;color:var(--text3);line-height:1.7">Paid immediate · Full creative · All channels · Fast launch · Broader range · MOQ then scale</div></div>
+    <div class="qc" data-q="bl" onclick="selQuad(this)" style="border-color:var(--border2)"><div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:3px">Organic first</div><div style="font-size:10px;color:var(--text3);margin-bottom:8px">Low budget · Low risk</div><div style="font-size:10px;color:var(--text3);line-height:1.7">No paid initially · Hero asset only · 1–2 channels · Slow launch · Single SKU · MOQ only</div></div>
+    <div class="qc" data-q="br" onclick="selQuad(this)" style="border-color:var(--border)"><div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:3px">Concentrated bet</div><div style="font-size:10px;color:var(--text3);margin-bottom:8px">Low budget · High risk</div><div style="font-size:10px;color:var(--text3);line-height:1.7">Single channel · One asset · Fast launch · Limited drop · Scarcity as lever</div></div>
+  </div>
+  <div class="card"><div class="clabel">Notes</div><textarea id="s5-notes" placeholder="Why does this model fit this brand at this stage..." oninput="sv('s5-notes')"></textarea></div>
+  <div class="actions"><button class="btn" onclick="go('s4')">← Back</button><button class="btn btn-p" onclick="done('s5')">Mark complete →</button></div>
+</div>
+
+<!-- S6 -->
+<div class="stage" id="stage-s6">
+  <div class="eyebrow">Step 06 — Launch</div>
+  <div class="stitle"><strong>Orchestrate</strong></div>
+  <div class="sdesc">Build the GTM strategy deck. Add campaign vectors. The Gantt plots automatically from your vectors.</div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card"><div class="clabel">Campaign architecture</div><textarea id="s6-arch" placeholder="How many campaigns this year, sequence, what arc the year expresses..." oninput="sv('s6-arch')"></textarea></div>
+    <div class="card"><div class="clabel">Channel + budget</div><textarea id="s6-ch" placeholder="Primary channels, budget allocation, weighting logic..." oninput="sv('s6-ch')"></textarea></div>
+    <div class="card"><div class="clabel">Product sequencing</div><textarea id="s6-prod" placeholder="What launches when, hero product, range expansion timing..." oninput="sv('s6-prod')"></textarea></div>
+    <div class="card"><div class="clabel">Phase triggers</div><textarea id="s6-trig" placeholder="Signal conditions that unlock Phase 2..." oninput="sv('s6-trig')"></textarea></div>
+  </div>
+  <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Campaign vectors</div>
+  <div id="vec-list-s6"></div>
+  <button class="btn" onclick="addVec()" style="margin-bottom:16px">+ Add campaign</button>
+  <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Gantt — plotted from vectors</div>
+  <div class="gantt-wrap"><div id="gantt" style="min-width:520px"></div></div>
+  <div style="font-size:10px;color:var(--text3);margin-top:6px;font-family:var(--mono)">The Gantt is the output of the strategy — not a separate planning exercise.</div>
+  <div class="actions"><button class="btn" onclick="go('s5')">← Back</button><button class="btn btn-p" onclick="done('s6')">Mark complete →</button></div>
+</div>
+
+<!-- S7 -->
+<div class="stage" id="stage-s7">
+  <div class="eyebrow">Step 07 — Execute</div>
+  <div class="stitle">Creative <strong>production</strong></div>
+  <div class="sdesc">Each campaign has a starting point and an ending point. The movement between them is the brief. Select a campaign to open its production brief.</div>
+  <div id="s7-empty" style="display:none;border:1px dashed var(--border2);border-radius:var(--rl);padding:32px;text-align:center">
+    <div style="font-family:var(--mono);font-size:24px;color:var(--text3);margin-bottom:8px">07</div>
+    <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px">No campaigns defined yet</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px">Add campaign vectors in step 6 first.</div>
+    <button class="btn" onclick="go('s6')">← Go to step 6</button>
+  </div>
+  <div id="s7-content">
+    <div class="cbar" id="s7-cbar">
+      <div class="cbitem"><div class="cblabel">Pattern</div><div class="cbval" id="s7-pat">—</div></div>
+      <div class="cbitem"><div class="cblabel" style="color:var(--text2)">Order</div><div class="cbval" id="s7-order">—</div></div>
+      <div class="cbitem"><div class="cblabel" style="color:var(--text2)">Chaos</div><div class="cbval" id="s7-chaos">—</div></div>
+    </div>
+    <div class="split">
+      <div class="vlist" id="s7-vlist"><div class="vll">Campaigns</div></div>
+      <div class="splitright" id="s7-right">
+        <div class="emptysel" id="s7-empty-sel"><div class="emptynum">→</div><div style="font-size:12px">Select a campaign</div></div>
+        <div id="s7-brief" style="display:none;padding:16px">
+          <div class="sl">The truth to convey</div>
+          <div class="tgrid" id="s7-tgrid">
+            <div class="tc" data-t="emotional" onclick="s7SelTruth(this)"><div class="tcl">Emotional state</div><div class="tcb">Internal experience made visible</div></div>
+            <div class="tc" data-t="objective" onclick="s7SelTruth(this)"><div class="tcl">Objective truth</div><div class="tcb">Demonstrable product or material fact</div></div>
+            <div class="tc" data-t="benefit" onclick="s7SelTruth(this)"><div class="tcl">Product benefit</div><div class="tcb">What the product enables or prevents</div></div>
+            <div class="tc" data-t="social" onclick="s7SelTruth(this)"><div class="tcl">Social truth</div><div class="tcb">What this choice means socially</div></div>
+            <div class="tc" data-t="cultural" onclick="s7SelTruth(this)"><div class="tcl">Cultural truth</div><div class="tcb">What the brand says about now</div></div>
+            <div class="tc" data-t="philosophical" onclick="s7SelTruth(this)"><div class="tcl">Philosophical truth</div><div class="tcb">A belief about the world</div></div>
+          </div>
+          <div class="sl" style="margin-top:14px">Production brief</div>
+          <div class="bgrid">
+            <div class="bcell"><div class="bcl">Opening state</div><textarea id="s7-opening" placeholder="The facet the campaign begins in — expressed before a word is spoken..." oninput="s7SaveBF('opening')"></textarea></div>
+            <div class="bcell"><div class="bcl">Closing state</div><textarea id="s7-closing" placeholder="The facet the campaign ends in — position the audience is left in..." oninput="s7SaveBF('closing')"></textarea></div>
+            <div class="bcell"><div class="bcl">Visual mechanic</div><textarea id="s7-mechanic" placeholder="The specific creative device that makes the truth visible — not chosen, derived..." oninput="s7SaveBF('mechanic')"></textarea></div>
+            <div class="bcell"><div class="bcl">Aesthetic world</div><textarea id="s7-aesthetic" placeholder="Location, texture, light — chosen for what they do, not how they look..." oninput="s7SaveBF('aesthetic')"></textarea></div>
+            <div class="bcell"><div class="bcl">Format</div><textarea id="s7-format" placeholder="Hero film, photography, short form — derived from vector length and proximity..." oninput="s7SaveBF('format')"></textarea></div>
+            <div class="bcell"><div class="bcl">What it must never do</div><textarea id="s7-never" placeholder="Rejection criteria — wrong pole, wrong facet, wrong truth type..." oninput="s7SaveBF('never')"></textarea></div>
+          </div>
+          <div class="sl" style="margin-top:14px">Constraint audit — before anything ships</div>
+          <div class="auditbox">
+            <div class="arow" onclick="s7TogAudit(0)"><div class="ach" id="s7-ac0"></div><div class="aq">Does the opening frame express the correct starting facet?</div></div>
+            <div class="arow" onclick="s7TogAudit(1)"><div class="ach" id="s7-ac1"></div><div class="aq">Does the closing frame express the correct ending facet?</div></div>
+            <div class="arow" onclick="s7TogAudit(2)"><div class="ach" id="s7-ac2"></div><div class="aq">Is the truth derived from the vector — not from creative preference?</div></div>
+            <div class="arow" onclick="s7TogAudit(3)"><div class="ach" id="s7-ac3"></div><div class="aq">Does the visual mechanic make the truth visible without stating it?</div></div>
+            <div class="arow" onclick="s7TogAudit(4)"><div class="ach" id="s7-ac4"></div><div class="aq">Does the output avoid expressions of the wrong pole throughout?</div></div>
+            <div class="afoot"><span class="ar" id="s7-ar">Click each row to audit</span><button class="btn" style="font-size:9px;padding:3px 8px" onclick="s7ResetAudit()">Reset</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="go('s6')">← Back</button><button class="btn btn-p" onclick="done('s7')">Mark complete →</button></div>
+</div>
+
+<!-- S8 -->
+<div class="stage" id="stage-s8">
+  <div class="eyebrow">Step 08 — Execute</div>
+  <div class="stitle">The <strong>brief</strong></div>
+  <div class="sdesc">The full derivation chain. Vector → truth → visual mechanic → production brief → constraint audit. Nothing ships without passing the audit.</div>
+  <div class="split">
+    <div class="vlist" id="s8-vlist"><div class="vll">Campaigns</div></div>
+    <div class="splitright" id="s8-right">
+      <div class="emptysel" id="s8-empty-sel"><div class="emptynum">08</div><div style="font-size:12px">Select a campaign to derive its brief</div></div>
+      <div class="s8chain" id="s8-chain" style="display:none">
+        <div class="sl">The campaign vector</div>
+        <div class="veccard">
+          <div class="vctop2"><span class="vcnum2" id="s8-vnum">01</span><span class="vcname2" id="s8-vname">—</span><span class="vcper" id="s8-vper"></span></div>
+          <div class="vcarc2"><span class="viff" id="s8-vfrom">—</span><div class="arcline"></div><span style="font-size:10px;color:var(--text3)" id="s8-vsep">→</span><div class="arcline"></div><span class="vift" id="s8-vto">—</span></div>
+          <div class="vcint" id="s8-vint"></div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="sl">The truth to convey</div>
+        <div class="tgrid" id="s8-tgrid">
+          <div class="tc" data-t="emotional" onclick="s8SelTruth(this)"><div class="tcl">Emotional state</div><div class="tcb">Internal experience made visible</div></div>
+          <div class="tc" data-t="objective" onclick="s8SelTruth(this)"><div class="tcl">Objective truth</div><div class="tcb">Demonstrable product or material fact</div></div>
+          <div class="tc" data-t="benefit" onclick="s8SelTruth(this)"><div class="tcl">Product benefit</div><div class="tcb">What the product enables or prevents</div></div>
+          <div class="tc" data-t="social" onclick="s8SelTruth(this)"><div class="tcl">Social truth</div><div class="tcb">What this choice means socially</div></div>
+          <div class="tc" data-t="cultural" onclick="s8SelTruth(this)"><div class="tcl">Cultural truth</div><div class="tcb">What the brand says about now</div></div>
+          <div class="tc" data-t="philosophical" onclick="s8SelTruth(this)"><div class="tcl">Philosophical truth</div><div class="tcb">A belief about the world</div></div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="sl">The visual mechanic</div>
+        <div class="mechbox"><div class="mbt" id="s8-mt">Select a truth type above</div><div class="mbb" id="s8-mb">The visual mechanic — the specific creative device that makes the truth visible — appears here. Not chosen. Derived.</div></div>
+        <div class="arr">↓</div>
+        <div class="sl">Production brief</div>
+        <div class="bgrid">
+          <div class="bcell"><div class="bcl">Opening state</div><textarea id="s8-opening" placeholder="The facet the campaign begins in..." oninput="s8SaveBF('opening')"></textarea></div>
+          <div class="bcell"><div class="bcl">Closing state</div><textarea id="s8-closing" placeholder="The facet the campaign ends in..." oninput="s8SaveBF('closing')"></textarea></div>
+          <div class="bcell"><div class="bcl">The truth</div><textarea id="s8-truth" placeholder="What this campaign exists to make the audience feel, know, or believe..." oninput="s8SaveBF('truth')"></textarea></div>
+          <div class="bcell"><div class="bcl">Visual mechanic</div><textarea id="s8-mechanic" placeholder="The specific device — not chosen, derived..." oninput="s8SaveBF('mechanic')"></textarea></div>
+          <div class="bcell"><div class="bcl">Aesthetic world</div><textarea id="s8-aesthetic" placeholder="Location, texture, light — chosen for what they do..." oninput="s8SaveBF('aesthetic')"></textarea></div>
+          <div class="bcell"><div class="bcl">What it must never do</div><textarea id="s8-never" placeholder="Rejection criteria — wrong pole, wrong facet..." oninput="s8SaveBF('never')"></textarea></div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="sl">Constraint audit — before anything ships</div>
+        <div class="auditbox">
+          <div class="arow" onclick="s8TogAudit(0)"><div class="ach" id="s8-ac0"></div><div><div class="aq">Does the opening frame express the correct starting facet?</div><div class="asub">The chaos state must be present before the first word is spoken</div></div></div>
+          <div class="arow" onclick="s8TogAudit(1)"><div class="ach" id="s8-ac1"></div><div><div class="aq">Does the closing frame express the correct ending facet?</div><div class="asub">Realisation not celebration — the moment, not the aftermath</div></div></div>
+          <div class="arow" onclick="s8TogAudit(2)"><div class="ach" id="s8-ac2"></div><div><div class="aq">Is the truth derived from the vector — not from creative preference?</div><div class="asub">Every creative decision traceable back to the constraint</div></div></div>
+          <div class="arow" onclick="s8TogAudit(3)"><div class="ach" id="s8-ac3"></div><div><div class="aq">Does the visual mechanic make the truth visible without stating it?</div><div class="asub">Show the state — never name it</div></div></div>
+          <div class="arow" onclick="s8TogAudit(4)"><div class="ach" id="s8-ac4"></div><div><div class="aq">Does the output avoid expressions of the wrong pole throughout?</div><div class="asub">Comfort, aspiration, resolution before earned — all wrong pole</div></div></div>
+          <div class="afoot"><span class="ar" id="s8-ar">Click each row to audit</span><button class="btn" style="font-size:9px;padding:3px 8px" onclick="s8ResetAudit()">Reset</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="go('s7')">← Back</button><button class="btn btn-p" onclick="done('s8')">Mark complete →</button></div>
+</div>
+
+<!-- S9 -->
+<div class="stage" id="stage-s9">
+  <div class="eyebrow">Step 09 — Execute</div>
+  <div class="stitle">Content <strong>ecosystem</strong></div>
+  <div class="sdesc">One hero asset. Five layers of expression. All governed by the same constraint. Select a campaign to build its content ecosystem.</div>
+  <div class="split">
+    <div class="vlist" id="s9-vlist"><div class="vll">Campaigns</div></div>
+    <div class="splitright" id="s9-right">
+      <div class="emptysel" id="s9-empty"><div class="emptynum">09</div><div style="font-size:12px">Select a campaign</div></div>
+      <div id="s9-eco" style="display:none;padding:16px">
+        <div class="pillbar" id="s9-pill">
+          <div class="pillit"><div class="pillil">Campaign</div><div class="pilliv" id="s9-pname">—</div></div>
+          <div class="pillit"><div class="pillil">Vector</div><div class="pilliv" id="s9-pvec">—</div></div>
+        </div>
+        <div class="progbar"><div class="progfill" id="s9-prog" style="width:0%"></div></div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:12px 14px;margin-bottom:6px">
+          <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:4px">Layer 1 — Hero asset · full budget</div>
+          <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px">Hero film / campaign asset</div>
+          <div style="font-size:10px;color:var(--text2)">The truth expressed in its most complete form. Everything else derives from or responds to this.</div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="layer" id="l2" style="border-color:rgba(255,255,255,0.13)">
+          <div class="layerhead" style="background:var(--bg2)" onclick="togLayer('l2')"><div class="lhn" style="color:var(--text2)">02</div><div class="lht"><div class="lhti" style="color:var(--text2)">Format adaptations</div><div class="lhs" style="color:rgba(255,255,255,0.1)">Same creative, different container</div></div><div class="ltog" style="color:var(--text2)" id="lt-l2">↓</div></div>
+          <div class="layerbody" id="lb-l2"><div class="lnote">The hero asset recut, resized, and reformatted for each placement. The truth stays identical. Only the container changes.</div><div class="tags"><span class="tag">90s hero film</span><span class="tag">30s cut</span><span class="tag">15s cut</span><span class="tag">6s bumper</span><span class="tag">Vertical 9:16</span><span class="tag">Square 1:1</span><span class="tag">OOH static</span><span class="tag">Display banner</span><span class="tag">Email header</span><span class="tag">Press still</span></div><div class="ccheck" style="background:var(--bg2);border:1px solid rgba(255,255,255,0.1)"><div class="ccl" style="color:var(--text2)">Constraint check</div><div class="ccb" style="color:var(--text3)">Does the truth survive the format change? Does the opening state still read in 6 seconds?</div></div><div class="sbrow"><button class="sb" id="s9-l2-pass" onclick="s9SetStatus('l2','pass')">✓ Passes</button><button class="sb" id="s9-l2-fail" onclick="s9SetStatus('l2','fail')">✕ Needs work</button></div><textarea style="min-height:40px;margin-top:6px" id="s9-n-l2" placeholder="Notes..." oninput="s9SaveNote('l2')"></textarea></div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="layer" id="l3" style="border-color:var(--border2)">
+          <div class="layerhead" style="background:var(--bg2)" onclick="togLayer('l3')"><div class="lhn" style="color:var(--text2)">03</div><div class="lht"><div class="lhti" style="color:var(--text2)">Channel-native content</div><div class="lhs" style="color:var(--text3)">Same truth, different form — built for platform behaviour</div></div><div class="ltog" style="color:var(--text2)" id="lt-l3">↓</div></div>
+          <div class="layerbody" id="lb-l3"><div class="lnote">Not adapted from the hero — made specifically for the channel. The truth is identical. The form is completely different.</div><div class="tags"><span class="tag">TikTok native</span><span class="tag">Instagram organic series</span><span class="tag">YouTube companion</span><span class="tag">Editorial written piece</span><span class="tag">Email narrative sequence</span><span class="tag">Podcast / audio</span></div><div class="ccheck" style="background:var(--bg2);border:1px solid rgba(255,255,255,0.1)"><div class="ccl" style="color:var(--text2)">Constraint check</div><div class="ccb" style="color:var(--text3)">Does this feel native to the platform without losing the brand's coordinate?</div></div><div class="sbrow"><button class="sb" id="s9-l3-pass" onclick="s9SetStatus('l3','pass')">✓ Passes</button><button class="sb" id="s9-l3-fail" onclick="s9SetStatus('l3','fail')">✕ Needs work</button></div><textarea style="min-height:40px;margin-top:6px" id="s9-n-l3" placeholder="Notes..." oninput="s9SaveNote('l3')"></textarea></div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="layer" id="l4" style="border-color:var(--border2)">
+          <div class="layerhead" style="background:var(--bg2)" onclick="togLayer('l4')"><div class="lhn" style="color:var(--text2)">04</div><div class="lht"><div class="lhti" style="color:var(--text2)">Behind the scenes</div><div class="lhs" style="color:var(--text3)">Process truth — the making, not the truth itself</div></div><div class="ltog" style="color:var(--text2)" id="lt-l4">↓</div></div>
+          <div class="layerbody" id="lb-l4"><div class="lnote">BTS expresses the process truth — how the visual mechanic was achieved, what the location demanded, what the product went through.</div><div class="tags"><span class="tag">Production diary</span><span class="tag">Location footage</span><span class="tag">Craft detail</span><span class="tag">Director commentary</span><span class="tag">Product in conditions</span><span class="tag">Team perspective</span></div><div class="ccheck" style="background:var(--bg2);border:1px solid rgba(255,255,255,0.12)"><div class="ccl" style="color:var(--text2)">Constraint check</div><div class="ccb" style="color:var(--text3)">Does the BTS reveal something that deepens the campaign truth rather than undermining it?</div></div><div class="sbrow"><button class="sb" id="s9-l4-pass" onclick="s9SetStatus('l4','pass')">✓ Passes</button><button class="sb" id="s9-l4-fail" onclick="s9SetStatus('l4','fail')">✕ Needs work</button></div><textarea style="min-height:40px;margin-top:6px" id="s9-n-l4" placeholder="Notes..." oninput="s9SaveNote('l4')"></textarea></div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="layer" id="l5" style="border-color:var(--border2)">
+          <div class="layerhead" style="background:var(--bg2)" onclick="togLayer('l5')"><div class="lhn" style="color:var(--text2)">05</div><div class="lht"><div class="lhti" style="color:var(--text2)">UGC and reactive</div><div class="lhs" style="color:rgba(255,255,255,0.1)">Audience-generated — amplified when on-pattern</div></div><div class="ltog" style="color:var(--text2)" id="lt-l5">↓</div></div>
+          <div class="layerbody" id="lb-l5"><div class="lnote">The brand doesn't make this — but the constraint governs which UGC gets amplified. On-pattern gets reposted. Off-pattern gets ignored regardless of performance.</div><div class="tags"><span class="tag">UGC repost</span><span class="tag">Community response</span><span class="tag">Cultural moment reply</span><span class="tag">Seeded UGC brief</span><span class="tag">Viral amplification</span><span class="tag">Creator collaboration</span></div><div class="ccheck" style="background:var(--bg2);border:1px solid rgba(255,255,255,0.1)"><div class="ccl" style="color:var(--text2)">Constraint check</div><div class="ccb" style="color:var(--text3)">Would amplifying this express the right truth — or dilute it? Speed is not a reason to bypass the constraint.</div></div><div class="sbrow"><button class="sb" id="s9-l5-pass" onclick="s9SetStatus('l5','pass')">✓ Passes</button><button class="sb" id="s9-l5-fail" onclick="s9SetStatus('l5','fail')">✕ Needs work</button></div><textarea style="min-height:40px;margin-top:6px" id="s9-n-l5" placeholder="Notes..." oninput="s9SaveNote('l5')"></textarea></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="go('s8')">← Back</button><button class="btn btn-p" onclick="done('s9')">Mark complete →</button></div>
+</div>
+
+<!-- S10 -->
+<div class="stage" id="stage-s10">
+  <div class="eyebrow">Step 10 — Execute</div>
+  <div class="stitle"><strong>Scale</strong></div>
+  <div class="sdesc">The phase trigger is not a date — it's a signal. All four conditions must be met before Phase 2 unlocks. Any one failing — diagnose before increasing spend.</div>
+  <div class="split">
+    <div class="vlist" id="s10-vlist"><div class="vll">Campaigns</div></div>
+    <div class="splitright" id="s10-right">
+      <div class="emptysel" id="s10-empty"><div class="emptynum">10</div><div style="font-size:12px">Select a campaign</div></div>
+      <div id="s10-panel" style="display:none;padding:16px">
+        <div class="sl">Phase trigger — signal conditions</div>
+        <div class="trigbox">
+          <div class="tghead"><div class="tght">Phase trigger</div><div class="tghs">All four conditions must be met. Not a date — a signal.</div></div>
+          <div class="tggrid">
+            <div class="tgc"><div class="tgcl">Paid performance</div><div class="tgcm">ROAS target</div><div class="tgcb">Sustained signal the creative is working. Not a single spike.</div><input class="tgcin" id="s10-roas" placeholder="e.g. 2x for 3 consecutive weeks" oninput="s10SaveT('roas')"></div>
+            <div class="tgc"><div class="tgcl">Acquisition cost</div><div class="tgcm">CAC target</div><div class="tgcb">Cost per acquisition within the model's acceptable range.</div><input class="tgcin" id="s10-cac" placeholder="e.g. Below £25 per customer" oninput="s10SaveT('cac')"></div>
+            <div class="tgc"><div class="tgcl">Creative signal</div><div class="tgcm">CTR target</div><div class="tgcb">Weak CTR means the creative, not the spend level, needs attention first.</div><input class="tgcin" id="s10-ctr" placeholder="e.g. Above 2.5% on primary channel" oninput="s10SaveT('ctr')"></div>
+            <div class="tgc"><div class="tgcl">Product signal</div><div class="tgcm">Sell-through target</div><div class="tgcb">Scaling without product-market signal risks spending into a demand problem.</div><input class="tgcin" id="s10-st" placeholder="e.g. Above 60% within 6 weeks" oninput="s10SaveT('st')"></div>
+          </div>
+          <div class="tgstatus">
+            <div class="tgsl" id="s10-tgsl">Set targets above, then mark signal status</div>
+            <div class="chkbtns">
+              <button class="chkbtn" id="s10-btn-met" onclick="s10SetTrig('met')">All conditions met</button>
+              <button class="chkbtn" id="s10-btn-not" onclick="s10SetTrig('not')">Signal not yet met</button>
+            </div>
+          </div>
+        </div>
+        <div class="arr">↓</div>
+        <div class="decrow">
+          <div class="deccell" style="background:var(--bg2);border:1px solid var(--border)"><div class="declabel" style="color:var(--text2)">Phase trigger met</div><div class="dectitle" style="color:var(--text)">Scale — Phase 2 unlocks</div><div class="decbody" style="color:var(--text3)">Same constraint. Same truth. More of everything that's working. Nothing that wasn't working gets more budget.</div></div>
+          <div class="deccell" style="background:var(--bg2);border:1px solid var(--border)"><div class="declabel" style="color:var(--text2)">Phase trigger not met</div><div class="dectitle" style="color:var(--text)">Diagnose — do not scale</div><div class="decbody" style="color:var(--text3)">Identify which condition failed. Fix the root cause before adding budget.</div></div>
+        </div>
+        <div class="sl">If signal not met — diagnose first</div>
+        <div class="diagbox">
+          <div class="diagrow"><div class="diagcond">ROAS failing</div><div class="diagfix">Channel or audience targeting problem. Review channel selection before increasing spend.</div></div>
+          <div class="diagrow"><div class="diagcond">CAC failing</div><div class="diagfix">Offer or landing page problem. Fix the funnel, not the spend.</div></div>
+          <div class="diagrow"><div class="diagcond">CTR failing</div><div class="diagfix">Creative or truth problem. Go back to the brief. Revisit the visual mechanic before increasing budget.</div></div>
+          <div class="diagrow"><div class="diagcond">Sell-through failing</div><div class="diagfix">Product or pricing problem. Never increase paid spend to solve a product-market fit problem.</div></div>
+        </div>
+        <div class="sl" style="margin-top:12px">Phase 2 — scale acquisition</div>
+        <div class="p2box" id="s10-p2box">
+          <div class="p2head"><div class="p2ht">Scale acquisition</div><div class="p2hs">Same constraint. Same truth. More of everything working.</div></div>
+          <div class="p2grid">
+            <div class="p2c"><div class="p2cl">Paid media</div><div class="p2cw">Test budget · primary channel</div><div class="p2cn">Full budget · scale winners</div><div class="p2cb">Winning creative gets more budget — losing creative gets cut not saved.</div></div>
+            <div class="p2c"><div class="p2cl">Creative production</div><div class="p2cw">Hero asset · core formats</div><div class="p2cn">Extended suite · new vectors</div><div class="p2cb">New campaign vectors from the same constraint. More formats, more channel-native content.</div></div>
+            <div class="p2c"><div class="p2cl">Channel strategy</div><div class="p2cw">1–2 primary channels</div><div class="p2cn">Expanded channel set</div><div class="p2cb">Each new channel gets content native to it — not a repurposed version.</div></div>
+            <div class="p2c"><div class="p2cl">Audience targeting</div><div class="p2cw">Core audience · cold</div><div class="p2cn">Lookalike + retargeting</div><div class="p2cb">Build lookalike audiences from converters. Retarget engaged non-converters.</div></div>
+            <div class="p2c"><div class="p2cl">Product strategy</div><div class="p2cw">Hero product · MOQ</div><div class="p2cn">Range expansion</div><div class="p2cb">2–3 adjacent SKUs where sell-through signal exists. Marketing still leads with the hero.</div></div>
+            <div class="p2c"><div class="p2cl">Retention activation</div><div class="p2cw">Welcome sequence only</div><div class="p2cn">Full retention track</div><div class="p2cb">Loyalty activates. Community deepens. Phase 2 acquisition feeds retention simultaneously.</div></div>
+          </div>
+          <div class="p2foot"><div class="p2ft">The constraint never changes in Phase 2. Scale is not a reason to deviate from the coordinate.</div></div>
+        </div>
+        <div style="margin-top:10px"><label class="fl">Phase 2 notes</label><textarea id="s10-p2notes" placeholder="Phase 2 configuration — channels expanding, new creative being briefed, timeline..." oninput="s10SaveP2Notes()"></textarea></div>
+      </div>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="go('s9')">← Back</button><button class="btn btn-p" onclick="done('s10')">Mark complete →</button></div>
+</div>
+
+<!-- S11 -->
+<div class="stage" id="stage-s11">
+  <div class="eyebrow">Step 11 — Execute</div>
+  <div class="stitle">Measure <strong>and loop</strong></div>
+  <div class="sdesc">The system loops. The constraint doesn't. Every campaign makes the next one more precise — never different.</div>
+  <div class="sl">Reporting cadence — three intervals, each with a different job</div>
+  <div class="cadgrid">
+    <div class="cadcard"><div class="cadhead"><div class="cadint">Weekly</div><div class="cadti">Performance pulse</div></div><div class="cadbody"><div class="caddesc">Tactical adjustments only. No strategic changes at weekly level.</div><div class="caditems"><div class="caditem"><div class="caddot"></div>ROAS, CAC, CTR, spend pacing</div><div class="caditem"><div class="caddot"></div>Phase trigger condition check</div><div class="caditem"><div class="caddot"></div>Bid and audience refinements</div></div><label class="fl" style="margin-top:8px">Last review</label><input type="text" id="s11-wd" placeholder="e.g. 22 Mar 2026" oninput="s11Save('wd')"><textarea style="min-height:48px;margin-top:6px" id="s11-wn" placeholder="Weekly pulse notes..." oninput="s11Save('wn')"></textarea></div></div>
+    <div class="cadcard"><div class="cadhead"><div class="cadint">Monthly</div><div class="cadti">Campaign review</div></div><div class="cadbody"><div class="caddesc">Full campaign performance against all phase trigger conditions.</div><div class="caditems"><div class="caditem"><div class="caddot"></div>All phase trigger conditions</div><div class="caditem"><div class="caddot"></div>Sell-through and retention metrics</div><div class="caditem"><div class="caddot"></div>Phase 2 go / no-go decision</div><div class="caditem"><div class="caddot"></div>Cut what isn't working</div></div><label class="fl" style="margin-top:8px">Last review</label><input type="text" id="s11-md" placeholder="e.g. Mar 2026" oninput="s11Save('md')"><textarea style="min-height:48px;margin-top:6px" id="s11-mn" placeholder="Monthly review notes..." oninput="s11Save('mn')"></textarea></div></div>
+    <div class="cadcard"><div class="cadhead"><div class="cadint">Quarterly</div><div class="cadti">Architecture review</div></div><div class="cadbody"><div class="caddesc">Is the annual campaign architecture still correct?</div><div class="caditems"><div class="caditem"><div class="caddot"></div>Campaign vectors vs audience response</div><div class="caditem"><div class="caddot"></div>Constraint refinement — not changing</div><div class="caditem"><div class="caddot"></div>Feed learnings into next season's brief</div></div><label class="fl" style="margin-top:8px">Last review</label><input type="text" id="s11-qd" placeholder="e.g. Q1 2026" oninput="s11Save('qd')"><textarea style="min-height:48px;margin-top:6px" id="s11-qn" placeholder="Quarterly architecture review notes..." oninput="s11Save('qn')"></textarea></div></div>
+  </div>
+  <div class="arr">↓</div>
+  <div class="sl">The loop — feeding back into the architecture</div>
+  <div class="loopbox">
+    <div class="loophead"><div class="loopht">Campaign 1 scaling → Campaign 2 briefing begins</div><div class="loophs">The system is circular not linear. The Gantt shows both running simultaneously.</div></div>
+    <div class="loopgrid">
+      <div class="lc"><div class="lcl">What feeds forward</div><div class="lct">Performance learnings into next brief</div><div class="lcb">Which formats worked. Which channels over-performed. Which truth type landed hardest. All of this sharpens the next campaign vector brief — not by changing the constraint but by applying it more precisely.</div></div>
+      <div class="lc"><div class="lcl">What never changes</div><div class="lct">The constraint stays fixed</div><div class="lcb">Performance data can refine how the constraint is expressed — never what the constraint is. If the data suggests the brand should express something outside its coordinate, that's a signal the targeting is wrong.</div></div>
+      <div class="lc"><div class="lcl">Overlap management</div><div class="lct">Campaign 1 and 2 run in parallel</div><div class="lcb">Campaign 2 enters production while Campaign 1 is scaling. The Gantt governs the overlap. Both campaigns are governed by the same constraint so there is no coherence risk.</div></div>
+      <div class="lc"><div class="lcl">Seasonal arc</div><div class="lct">Each campaign advances the arc</div><div class="lcb">Campaign 2 picks up the seasonal narrative where Campaign 1 left it. The audience experiences a progression not a reset.</div></div>
+    </div>
+    <div class="loopfoot"><div class="loopft">The system loops. The constraint doesn't. Every campaign makes the next one more precise — never different.</div></div>
+  </div>
+  <div class="sl" style="margin-top:16px">Learnings capture — feed into next brief</div>
+  <div class="card">
+    <div class="learncell"><div class="learnlabel">Formats that worked</div><textarea id="s11-lf" placeholder="Which formats over-performed and why..." oninput="s11Save('lf')"></textarea></div>
+    <div class="learncell"><div class="learnlabel">Channels that over-performed</div><textarea id="s11-lc" placeholder="Which channels delivered best CAC and ROAS..." oninput="s11Save('lc')"></textarea></div>
+    <div class="learncell"><div class="learnlabel">Truth type that landed</div><textarea id="s11-lt" placeholder="Which truth type resonated most..." oninput="s11Save('lt')"></textarea></div>
+    <div class="learncell"><div class="learnlabel">Audience that converted</div><textarea id="s11-la" placeholder="Which segment converted best..." oninput="s11Save('la')"></textarea></div>
+    <div class="learncell" style="margin-bottom:0"><div class="learnlabel">Do differently</div><textarea id="s11-ld" placeholder="What to change in Campaign 2 — applied to the how, never the what..." oninput="s11Save('ld')"></textarea></div>
+  </div>
+  <div class="crem"><div class="cremicon">∞</div><div><div class="cremt">The constraint is fixed. The expression refines.</div><div class="cremb">Every learning applies to how the constraint is expressed — never what it is. If the data suggests something outside the brand's coordinate, the targeting is wrong. Not the constraint.</div></div></div>
+  <div class="completebox">
+    <div class="complet">System complete</div>
+    <div class="compleb">The constraint is established. The documents are derived. The GTM is designed and executing. The loop is closed.<br>Campaign 2 briefing begins from these learnings — back to step 7 with a sharper expression of the same constraint.</div>
+    <button class="btn btn-p" onclick="go('s7')">Begin Campaign 2 → Step 7</button>
+  </div>
+  <div class="actions"><button class="btn" onclick="go('s10')">← Back</button><button class="btn btn-p" onclick="done('s11')">Mark complete →</button></div>
+</div>
+
+</main>
+</main>
+</div>
+
+<!-- BRAND MODAL -->
+<div class="modal-overlay" id="bmodal">
+  <div class="modal">
+    <div class="modal-title">Set brand</div>
+    <div class="modal-sub">This brand flows through every stage of the system.</div>
+    <div class="field"><label class="fl">Brand name</label><input type="text" id="m-name" placeholder="e.g. In Harm's Way"></div>
+    <div class="field"><label class="fl">Category</label><select id="m-cat"><option value="">Select category</option><option>Performance &amp; Sport</option><option>Wellness &amp; Mindfulness</option><option>Technology &amp; Software</option><option>Beauty &amp; Skincare</option><option>Food &amp; Drink</option><option>Other</option></select></div>
+
+    <div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-p" onclick="saveBrand()">Save</button></div>
+  </div>
+</div>
+
+<script>
+// ── SIDEBAR RESIZE ──
+(function(){
+  var sidebar=document.querySelector('.sidebar');
+  var app=document.querySelector('.app');
+  if(!sidebar||!app)return;
+  var resizer=document.createElement('div');
+  resizer.className='sidebar-resizer';
+  resizer.id='sidebar-resizer';
+  sidebar.appendChild(resizer);
+  var dragging=false;
+  var startX,startW;
+  resizer.addEventListener('mousedown',function(e){
+    dragging=true;
+    startX=e.clientX;
+    startW=sidebar.offsetWidth;
+    resizer.classList.add('dragging');
+    document.body.style.cursor='col-resize';
+    document.body.style.userSelect='none';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!dragging)return;
+    var w=Math.min(Math.max(startW+(e.clientX-startX),160),400);
+    app.style.gridTemplateColumns=w+'px 1fr';
+    positionFixedBar();
+  });
+  document.addEventListener('mouseup',function(){
+    if(!dragging)return;
+    dragging=false;
+    resizer.classList.remove('dragging');
+    document.body.style.cursor='';
+    document.body.style.userSelect='';
+  });
+})();
+
+function toggleSidebar(){
+  var app=document.querySelector('.app');
+  var collapsed=app.classList.toggle('sidebar-collapsed');
+  positionFixedBar();
+  S['sidebarCollapsed']=collapsed;saveS();
+}
+
+function positionFixedBar(){
+  var main=document.getElementById('main');
+  var bar=document.querySelector('.brand-fixed-bar');
+  if(main&&bar){var rect=main.getBoundingClientRect();bar.style.left=rect.left+'px';}
+}
+window.addEventListener('resize',positionFixedBar);
+setTimeout(positionFixedBar,0);
+
+// ── S1 QUESTIONNAIRE ──
+var patNames={co:'Single arc: C → O',oc:'Single arc: O → C',coc:'Three stage: C → O → C',oco:'Three stage: O → C → O',spiral:'Spiral: O → C → O²',static:'Static: fixed point',threshold:'Threshold dweller',fractal:'Fractal: nested'};
+var patDescs={co:'Chaos into order. One move, full resolution.',oc:'Order into chaos. Disruption as the whole point.',coc:'Resolves then detonates. The order was a trap.',oco:'Disrupts then redeems. Tension as the engine.',spiral:'Returns to order but higher — never the same place twice.',static:'No movement. Permanence is the entire message.',threshold:'Lives in tension permanently. Never resolves.',fractal:'Same pattern at every scale. Campaign = product = brand.'};
+var qAnswers={};
+var currentQ=1;
+
+function pickCard(el){
+  var q=parseInt(el.dataset.q);
+  var a=el.dataset.a;
+  var wasSelected=el.classList.contains('picked');
+  var cards=document.querySelectorAll('.qcard[data-q="'+q+'"]');
+  for(var i=0;i<cards.length;i++)cards[i].classList.remove('picked');
+  if(wasSelected){delete qAnswers[q];delete S['s1-q'+q];saveS();updateProgress();return;}
+  el.classList.add('picked');
+  qAnswers[q]=a;S['s1-q'+q]=a;saveS();updateProgress();
+}
+
+function advanceQ(from){
+  if(from<3){showQ(from+1);}
+  else{showScorePreview();}
+}
+
+function showQ(n){
+  for(var i=1;i<=3;i++){var el=document.getElementById('qstep-'+i);if(el)el.style.display=(i===n)?'':'none';}
+  currentQ=n;updateProgress();
+}
+
+function jumpQ(n){
+  if(n>currentQ&&!qAnswers[n-1])return;
+  showQ(n);
+}
+
+function updateProgress(){
+  for(var i=1;i<=3;i++){
+    var el=document.getElementById('qp'+i);if(!el)continue;
+    var isAnswered=!!qAnswers[i];var isPast=(i<currentQ);
+    var cls='qp-step'+(i===currentQ?' active':'')+(isPast?' done':'')+(isAnswered&&!isPast?' answered':'');
+    el.className=cls;
+    var num=el.querySelector('.qp-num');
+    if(num)num.textContent=isPast?'✓':String(i);
+  }
+  var s1=document.getElementById('qp-sep-1');var s2=document.getElementById('qp-sep-2');
+  if(s1)s1.style.background=(currentQ>=2)?'var(--text)':'var(--border)';
+  if(s2)s2.style.background=(currentQ>=3)?'var(--text)':'var(--border)';
+  var allDone=qAnswers[1]&&qAnswers[2]&&qAnswers[3];
+  var saveBtn=document.getElementById('q3-save-btn');
+  if(saveBtn)saveBtn.style.display=(allDone&&!S['s1-locked'])?'':'none';
+}
+
+function calcScores(){
+  var scores={co:0,oc:0,coc:0,oco:0,spiral:0,static:0,threshold:0,fractal:0};
+  var qs=Object.keys(qAnswers);
+  for(var k=0;k<qs.length;k++){
+    var q=qs[k];var a=qAnswers[q];
+    var el=document.querySelector('.qcard[data-q="'+q+'"][data-a="'+a+'"]');
+    if(el){var s=JSON.parse(el.dataset.scores);var ps=Object.keys(s);for(var p=0;p<ps.length;p++)scores[ps[p]]=(scores[ps[p]]||0)+s[ps[p]];}
+  }
+  return scores;
+}
+
+function showScorePreview(){}
+
+function lockQuestionnaire(){
+  S['s1-locked']=true;saveS();applyLockState(true);
+}
+
+function unlockQuestionnaire(){
+  S['s1-locked']=false;saveS();applyLockState(false);
+}
+
+function applyLockState(locked){
+  var cards=document.querySelectorAll('.qcard');
+  for(var i=0;i<cards.length;i++){cards[i].style.opacity=locked?'0.45':'1';cards[i].style.pointerEvents=locked?'none':'all';}
+  var navs=document.querySelectorAll('.q-nav button');
+  for(var i=0;i<navs.length;i++){
+    var isUnlockBtn=(navs[i].id==='q3-back-btn');
+    navs[i].style.opacity=locked&&!isUnlockBtn?'0.3':'1';
+    navs[i].style.pointerEvents=locked&&!isUnlockBtn?'none':'all';
+  }
+  var prog=document.getElementById('q-progress');
+  if(prog){prog.style.opacity=locked?'0.5':'1';prog.style.pointerEvents=locked?'none':'all';}
+  var backBtn=document.getElementById('q3-back-btn');
+  var saveBtn=document.getElementById('q3-save-btn');
+  if(locked){
+    if(backBtn){backBtn.textContent='Unlock';backBtn.onclick=unlockQuestionnaire;}
+    if(saveBtn)saveBtn.style.display='none';
+  } else {
+    if(backBtn){backBtn.textContent='← Back';backBtn.onclick=function(){showQ(2);};}
+    var allDone=qAnswers[1]&&qAnswers[2]&&qAnswers[3];
+    if(saveBtn)saveBtn.style.display=allDone?'':'none';
+  }
+}
+
+async function runAnalysis(){
+  var btn=document.getElementById('analyse-btn');
+  var result=document.getElementById('s1-analysis-result');
+  var text=document.getElementById('s1-analysis-text');
+  btn.disabled=true;btn.textContent='Analysing...';
+  result.style.display='';
+  text.textContent='Reading questionnaire answers and session material...';
+  var scores=calcScores();
+  var sorted=Object.entries(scores).sort(function(a,b){return b[1]-a[1];});
+  var top=sorted[0];
+  var lines=[];
+  var qs=Object.keys(qAnswers);
+  for(var k=0;k<qs.length;k++){
+    var q=qs[k];var a=qAnswers[q];
+    var el=document.querySelector('.qcard[data-q="'+q+'"][data-a="'+a+'"]');
+    var title=el?el.querySelector('.qcard-title').textContent:'';
+    lines.push('Q'+q+': '+title);
+  }
+  var context=document.getElementById('s1-context').value.trim();
+  var fileCtx=getFileContext();
+  if(fileCtx)context=(context?context+'\n\n':'')+fileCtx;
+  var brand=S.brand||'this brand';
+  var category=S.brandCat||'unknown category';
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:'You are the SEED methodology analyst. Based on questionnaire answers and session material, diagnose the brand pattern and propose the poles. Be direct and specific. Format: PATTERN: [name and one sentence]. ORDER: [what order means for this brand]. CHAOS: [what chaos means]. OBSERVATIONS: [2-3 bullet points from session material]. Under 250 words.',
+        messages:[{role:'user',content:'Brand: '+brand+' ('+category+')\nAnswers:\n'+lines.join('\n')+'\nSession material:\n'+(context||'None.')+'\nTop pattern: '+patNames[top[0]]+' ('+top[1]+' pts).'}]})
+    });
+    var data=await res.json();text.textContent=data.content[0].text;
+  }catch(e){text.textContent='Analysis unavailable. Top scoring pattern: '+patNames[top[0]]+'.';}
+  btn.disabled=false;btn.textContent='Analyse →';
+}
+
+function scrollToCard(id){
+  var el=document.getElementById(id);
+  if(el)setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'center'});},100);
+}
+
+function openOutput(id){console.log('Open output:',id);}
+
+function unlockOutputCards(){
+  var cards=document.querySelectorAll('.output-card');
+  for(var i=0;i<cards.length;i++)cards[i].classList.remove('locked');
+}
+
+var uploadedFiles=[];
+function dzOver(e){e.preventDefault();document.getElementById('s1-dropzone').classList.add('over');}
+function dzLeave(e){document.getElementById('s1-dropzone').classList.remove('over');}
+function dzDrop(e){e.preventDefault();document.getElementById('s1-dropzone').classList.remove('over');dzFiles(e.dataTransfer.files);}
+function dzFiles(files){for(var i=0;i<files.length;i++)readFile(files[i]);}
+
+function readFile(file){
+  var ext=file.name.split('.').pop().toLowerCase();
+  var id='f'+Date.now()+Math.random().toString(36).slice(2);
+  addFilePill(id,file.name,'Reading...');
+  if(ext==='txt'||ext==='md'){var r=new FileReader();r.onload=function(e){uploadedFiles.push({id:id,name:file.name,text:e.target.result});updateFilePill(id,'Ready');};r.readAsText(file);}
+  else if(ext==='pdf'){var r2=new FileReader();r2.onload=function(e){extractPDF(id,file.name,e.target.result);};r2.readAsArrayBuffer(file);}
+  else if(ext==='doc'||ext==='docx'){var r3=new FileReader();r3.onload=function(e){extractDocx(id,file.name,e.target.result);};r3.readAsArrayBuffer(file);}
+  else{updateFilePill(id,'Unsupported');}
+}
+
+function extractPDF(id,name,buffer){
+  if(typeof pdfjsLib==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=function(){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';doExtractPDF(id,name,buffer);};document.head.appendChild(s);}
+  else{doExtractPDF(id,name,buffer);}
+}
+
+function doExtractPDF(id,name,buffer){
+  pdfjsLib.getDocument({data:buffer}).promise.then(function(pdf){
+    var pages=[];var total=pdf.numPages;var done=0;
+    for(var i=1;i<=total;i++){(function(n){pdf.getPage(n).then(function(page){page.getTextContent().then(function(tc){pages[n-1]=tc.items.map(function(x){return x.str;}).join(' ');done++;if(done===total){uploadedFiles.push({id:id,name:name,text:pages.join('\n')});updateFilePill(id,'Ready');}});});})(i);}
+  }).catch(function(){updateFilePill(id,'Error');});
+}
+
+function extractDocx(id,name,buffer){
+  if(typeof mammoth==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';s.onload=function(){doExtractDocx(id,name,buffer);};document.head.appendChild(s);}
+  else{doExtractDocx(id,name,buffer);}
+}
+
+function doExtractDocx(id,name,buffer){mammoth.extractRawText({arrayBuffer:buffer}).then(function(r){uploadedFiles.push({id:id,name:name,text:r.value});updateFilePill(id,'Ready');}).catch(function(){updateFilePill(id,'Error');});}
+
+function addFilePill(id,name,status){
+  var list=document.getElementById('s1-filelist');var div=document.createElement('div');div.className='file-pill';div.id='pill-'+id;
+  div.innerHTML='<span class="file-pill-name">'+name+'</span><span class="file-pill-status" id="pstat-'+id+'">'+status+'</span><span class="file-pill-rm" onclick="removeFile(this)" data-fid="'+id+'">&#x2715;</span>';
+  list.appendChild(div);
+}
+
+function updateFilePill(id,status){var el=document.getElementById('pstat-'+id);if(el)el.textContent=status;}
+function removeFile(el){var id=el.dataset.fid;uploadedFiles=uploadedFiles.filter(function(f){return f.id!==id;});var pill=document.getElementById('pill-'+id);if(pill)pill.remove();}
+function getFileContext(){return uploadedFiles.map(function(f){return '--- File: '+f.name+' ---\n'+f.text.substring(0,3000);}).join('\n\n');}
+
+function s1Restore(){
+  for(var q=1;q<=3;q++){
+    var saved=S['s1-q'+q];
+    if(saved){var el=document.querySelector('.qcard[data-q="'+q+'"][data-a="'+saved+'"]');if(el){el.classList.add('picked');qAnswers[q]=saved;}}
+  }
+  var ctx=document.getElementById('s1-context');if(ctx&&S['s1-context'])ctx.value=S['s1-context'];
+  var answered=Object.keys(qAnswers).length;
+  if(answered>0){
+    var last=Math.max.apply(null,Object.keys(qAnswers).map(Number));
+    showQ(last<3?last+1:3);
+  }
+  updateProgress();
+  updateQRowStatus();
+  if(S['s1-locked'])setTimeout(function(){applyLockState(true);},50);
+  if(S['done-s1'])unlockOutputCards();
+}
+setTimeout(s1Restore,150);
+
+// ── CORE STATE ──
+const patEg={co:'Nike, Lululemon, ON Running',oc:'Supreme, Vetements, early Balenciaga',coc:'Yeezy / Kanye era, Alexander McQueen',oco:'Apple, Margiela, the Bible',spiral:"Chanel across decades, Arc'teryx, Disney",static:'Hermès, Rolex, Uniqlo',threshold:'Acne Studios, Celine, early Calvin Klein',fractal:'The Bible, Pixar, Apple at its peak'};
+const patMap={co:'C → O',oc:'O → C',coc:'C → O → C',oco:'O → C → O',spiral:'O → C → O²',static:'Static fixed point',threshold:'Threshold dweller',fractal:'Fractal nested'};
+const mechs={emotional:{t:'Emotional state — how the truth is made visible',b:'The internal experience is externalised through environment, behaviour, or visual distortion. The landscape becomes the psychology. The audience recognises the state before they can name it.'},objective:{t:'Objective truth — how the truth is made visible',b:'The product or material is shown under real conditions — stress-tested, in use, at the limit of its capability. The camera witnesses rather than presents.'},benefit:{t:'Product benefit — how the truth is made visible',b:'The before and after are implied by the movement of the arc, never stated. The opening frame shows the problem state. The closing frame shows the resolved state. The product is present but not hero.'},social:{t:'Social truth — how the truth is made visible',b:'Other people — the audience reflected back. The campaign shows who chooses this, what that choice looks like from the outside. Recognition over aspiration.'},cultural:{t:'Cultural truth — how the truth is made visible',b:'The brand takes a position. The campaign makes an argument, not a claim. It says something about the world that is true whether or not the product exists.'},philosophical:{t:'Philosophical truth — how the truth is made visible',b:'The campaign operates at the level of belief. Abstract enough to be universal, specific enough to be owned. The visual world expresses a civilisational argument through concrete, particular images.'}};
+const stageInfo=[{id:'s1',t:'Discovery',s:'The generative constraint'},{id:'s2',t:'Define the poles',s:'Order and Chaos defined'},{id:'s3',t:'Derive the outputs',s:'Three documents'},{id:'s4',t:'Scope diagnostic',s:'What exists, what is missing'},{id:'s5',t:'GTM model',s:'Budget and risk selection'},{id:'s6',t:'Orchestrate',s:'Strategy deck and Gantt'},{id:'s7',t:'Creative production',s:'Briefs derived from vectors'},{id:'s8',t:'The brief',s:'Full derivation chain'},{id:'s9',t:'Content ecosystem',s:'Five layers'},{id:'s10',t:'Scale',s:'Phase trigger conditions'},{id:'s11',t:'Measure and loop',s:'Reporting and loop back'}];
+let S={};
+try{S=JSON.parse(localStorage.getItem('seed')||'{}')}catch(e){}
+function saveS(){localStorage.setItem('seed',JSON.stringify(S))}
+function sv(k){const el=document.getElementById(k);if(el){S[k]=el.value;saveS()}}
+function gvecs(){try{return JSON.parse(localStorage.getItem('seed-vecs')||'[]')}catch(e){return[]}}
+function svecs(v){localStorage.setItem('seed-vecs',JSON.stringify(v))}
+function gbriefs(ns){try{return JSON.parse(localStorage.getItem('seed-'+ns+'-briefs')||'[]')}catch(e){return[]}}
+function sbriefs(ns,b){localStorage.setItem('seed-'+ns+'-briefs',JSON.stringify(b))}
+
+function toggleSec(name){
+  const sec=document.getElementById('sec-'+name);
+  const items=document.getElementById('sec-'+name+'-items');
+  const collapsed=sec.classList.toggle('collapsed');
+  items.style.maxHeight=collapsed?'0':items.scrollHeight+'px';
+}
+function initSecs(){
+  ['launch','execute'].forEach(name=>{
+    var sec=document.getElementById('sec-'+name);
+    var items=document.getElementById('sec-'+name+'-items');
+    if(sec&&items){sec.classList.add('collapsed');items.style.maxHeight='0';}
+  });
+}
+
+// ── NAVIGATION ──
+function showBrandView(view){
+  var views=['home','questionnaire','session'];
+  for(var i=0;i<views.length;i++){
+    var el=document.getElementById('brand-'+views[i]);
+    if(el)el.style.display=(views[i]===view)?'':'none';
+  }
+  document.getElementById('main').scrollTop=0;
+  if(view==='questionnaire'){
+    var answered=Object.keys(qAnswers).length;
+    if(answered>0){var last=Math.max.apply(null,Object.keys(qAnswers).map(Number));showQ(last<3?last+1:3);}
+    else showQ(1);
+  }
+  updateQRowStatus();
+}
+
+function updateQRowStatus(){
+  var answered=Object.keys(qAnswers).length;
+  var el=document.getElementById('q-row-status');
+  if(el){el.textContent=answered===3?'Complete':answered>0?answered+' of 3':'—';el.style.color=answered===3?'var(--text)':'var(--text3)';}
+  var sm=document.getElementById('sm-row-status');
+  if(sm){var hasCtx=S['s1-context']&&S['s1-context'].length>0;var hasFiles=uploadedFiles.length>0;sm.textContent=(hasCtx||hasFiles)?'Added':'—';sm.style.color=(hasCtx||hasFiles)?'var(--text)':'var(--text3)';}
+  checkBrandComplete();
+}
+
+function checkBrandComplete(){
+  var btn=document.getElementById('brand-complete-btn');
+  if(!btn)return;
+  var qDone=qAnswers[1]&&qAnswers[2]&&qAnswers[3];
+  var smDone=(S['s1-context']&&S['s1-context'].length>0)||uploadedFiles.length>0;
+  btn.disabled=!(qDone&&smDone);
+}
+
+function hoverSec(name,enter){
+  var items=document.getElementById('sec-'+name+'-items');
+  if(!items)return;
+  // Keep brand open if currently on brand page
+  if(!enter && name==='brand' && currentStageId==='s1')return;
+  if(enter){
+    items.style.transition='max-height 0.45s ease';
+    items.style.maxHeight='200px';
+  } else {
+    items.style.transition='max-height 0.2s ease';
+    items.style.maxHeight='0';
+  }
+}
+
+function go(id){
+  document.querySelectorAll('.stage').forEach(s=>s.classList.remove('act'));
+  document.querySelectorAll('.ni,.ni-top').forEach(n=>n.classList.remove('act'));
+  document.getElementById('stage-'+id).classList.add('act');
+  const ni=document.querySelector('[data-s="'+id+'"]');if(ni)ni.classList.add('act');
+  document.getElementById('main').scrollTop=0;
+  // Keep brand dropdown open when on brand page, close when leaving
+  var brandItems=document.getElementById('sec-brand-items');
+  if(brandItems){
+    if(id==='s1'){
+      var isOpen=brandItems.style.maxHeight&&brandItems.style.maxHeight!=='0px'&&brandItems.style.maxHeight!=='0';
+      if(isOpen&&currentStageId==='s1'){brandItems.style.transition='max-height 0.2s ease';brandItems.style.maxHeight='0';}
+      else{brandItems.style.transition='max-height 0.45s ease';brandItems.style.maxHeight='200px';}
+    } else {brandItems.style.transition='max-height 0.2s ease';brandItems.style.maxHeight='0';}
+  }
+  if(id==='s7')s7Init();
+  if(id==='s8')s8Init();
+  if(id==='s9')s9Init();
+  if(id==='s10')s10Init();
+}
+
+function done(id){
+  S['done-'+id]=true;saveS();
+  const el=document.getElementById('nd-'+id);if(el)el.className='ndot done';
+  updateDash();
+  const order=['dash','s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11'];
+  const i=order.indexOf(id);if(i<order.length-1)go(order[i+1]);
+}
+
+function updateDash(){
+  const c=stageInfo.filter(({id})=>S['done-'+id]).length;
+  document.getElementById('d-complete').textContent=c+'/9';
+  document.getElementById('d-brand').textContent=S.brand||'—';
+  let ph='Brand';
+  if(S['done-s1'])ph='Launch';
+  if(S['done-s6'])ph='Execute';
+  if(S['done-s11'])ph='Complete';
+  document.getElementById('d-phase').textContent=ph;
+  const ss=document.getElementById('sys-status');
+  if(c===11){ss.textContent='System complete';ss.className='spill on';}
+  else if(c>0){ss.textContent='In progress';ss.className='spill';}
+  else{ss.textContent='System incomplete';ss.className='spill';}
+  const dl=document.getElementById('dash-list');
+  dl.innerHTML=stageInfo.map(({id,t,s})=>{
+    const dn=S['done-'+id];
+    return`<div class="sr" onclick="go('${id}')"><span class="srn">${id.replace('s','').padStart(2,'0')}</span><div class="srm"><div class="srt">${t}</div><div class="srs">${s}</div></div><span class="srst" style="color:${dn?'var(--accent)':'var(--text3)'}">${dn?'Complete':'—'}</span><span style="font-size:10px;color:var(--text3)">→</span></div>`;
+  }).join('');
+}
+
+// ── MODAL ──
+function openModal(){document.getElementById('bmodal').classList.add('open');const el=document.getElementById('m-name');if(el&&S.brand)el.value=S.brand;const cat=document.getElementById('m-cat');if(cat&&S.brandCat)cat.value=S.brandCat;const desc=document.getElementById('m-desc');if(desc&&S.brandDesc)desc.value=S.brandDesc;}
+function closeModal(){document.getElementById('bmodal').classList.remove('open')}
+function saveBrand(){
+  const n=document.getElementById('m-name').value.trim();if(!n)return;
+  S.brand=n;S.brandCat=document.getElementById('m-cat').value;S.brandDesc=document.getElementById('m-desc').value;saveS();
+  document.getElementById('brand-display').textContent=n;updateDash();closeModal();
+}
+
+// ── S1 PATTERN ──
+function selPat(el){
+  document.querySelectorAll('.pc[data-p]').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');S.pat=el.dataset.p;saveS();
+  document.getElementById('pat-eg').textContent=patEg[S.pat]||'';
+}
+
+// ── S4 SCOPE ──
+const scopeKeys=['sc-constraint','sc-brandbook','sc-creativestrat','sc-positioning','sc-gtmdeck','sc-paid','sc-creative','sc-channel'];
+const scopeLabels={'sc-constraint':'the constraint','sc-brandbook':'the brand book','sc-creativestrat':'creative strategy','sc-positioning':'positioning deck','sc-gtmdeck':'GTM strategy deck','sc-paid':'paid media strategy','sc-creative':'creative production','sc-channel':'channel strategy'};
+function togScope(el){
+  const k=el.dataset.k,cur=S[k]||null;
+  if(cur===null){S[k]='has';el.className='scc has';el.querySelector('.sctog').textContent='✓';}
+  else if(cur==='has'){S[k]='miss';el.className='scc miss';el.querySelector('.sctog').textContent='✕';}
+  else{S[k]=null;el.className='scc';el.querySelector('.sctog').textContent='';}
+  saveS();updateScope();
+}
+function updateScope(){
+  scopeKeys.forEach(k=>{
+    const el=document.querySelector('[data-k="'+k+'"]');if(!el)return;
+    const v=S[k]||null;
+    el.className='scc'+(v==='has'?' has':v==='miss'?' miss':'');
+    el.querySelector('.sctog').textContent=v==='has'?'✓':v==='miss'?'✕':'';
+  });
+  const missing=scopeKeys.filter(k=>S[k]==='miss');
+  const has=scopeKeys.filter(k=>S[k]==='has');
+  const r=document.getElementById('sc-result');
+  if(!missing.length&&!has.length){r.innerHTML='<span style="font-size:11px;color:var(--text3)">Toggle components above to generate the diagnostic.</span>';return;}
+  if(missing.length===0){r.style.cssText='background:var(--bg2);border:1px solid var(--border2)';r.innerHTML='<span style="font-size:11px;color:var(--text2);font-weight:500">All components exist. The brand is fully built and executing.</span>';return;}
+  r.style.cssText='background:var(--bg2);border:1px solid var(--border2)';
+  r.innerHTML='<span style="font-size:11px;color:var(--text2);font-weight:500">Starting point: '+scopeLabels[missing[0]]+'</span><br><span style="font-size:11px;color:var(--text3)">'+missing.length+' component'+(missing.length>1?'s':'')+' missing. Begin with '+scopeLabels[missing[0]]+'.</span>';
+}
+
+// ── S5 QUADRANT ──
+function selQuad(el){
+  document.querySelectorAll('.qc[data-q]').forEach(c=>{c.classList.remove('sel');c.style.borderWidth='1px';});
+  el.classList.add('sel');el.style.borderWidth='1.5px';S.quad=el.dataset.q;saveS();
+}
+
+// ── S6 VECTORS + GANTT ──
+function addVec(){const v=gvecs();v.push({name:'',from:'',to:'',period:'',intent:''});svecs(v);renderVecs();}
+function upVec(i,k,val){const v=gvecs();if(v[i]){v[i][k]=val;svecs(v);}renderGantt(gvecs());}
+function rmVec(i){const v=gvecs();v.splice(i,1);svecs(v);renderVecs();}
+function renderVecs(){
+  const vecs=gvecs();
+  const list=document.getElementById('vec-list-s6');if(!list)return;
+  list.innerHTML=vecs.map((v,i)=>`<div class="vc"><div class="vctop"><span class="vcnum">${String(i+1).padStart(2,'0')}</span><input class="vcni" value="${v.name||''}" placeholder="Campaign name" oninput="upVec(${i},'name',this.value)"><input class="vcp" value="${v.period||''}" placeholder="Jan — Mar" oninput="upVec(${i},'period',this.value)"><span class="vcrm" onclick="rmVec(${i})">✕</span></div><div class="vcarc"><input class="vff" value="${v.from||''}" placeholder="Start facet" oninput="upVec(${i},'from',this.value)"><div class="varl"></div><span style="font-size:10px;color:var(--text3)">→</span><div class="varl"></div><input class="vft" value="${v.to||''}" placeholder="End facet" oninput="upVec(${i},'to',this.value)"></div><input class="vint" value="${v.intent||''}" placeholder="The intent — what does this movement do for the audience..." oninput="upVec(${i},'intent',this.value)"></div>`).join('');
+  renderGantt(vecs);
+}
+function renderGantt(vecs){
+  const g=document.getElementById('gantt');if(!g)return;
+  const mn=['J','F','M','A','M','J','J','A','S','O','N','D'];
+  const cols=['rgba(255,255,255,0.06)','rgba(255,255,255,0.06)','rgba(255,255,255,0.06)','rgba(255,255,255,0.06)','rgba(255,255,255,0.06)'];
+  const bds=['rgba(255,255,255,0.2)','rgba(255,255,255,0.2)','rgba(255,255,255,0.2)','rgba(255,255,255,0.2)','rgba(255,255,255,0.2)'];
+  const gc=`grid-template-columns:90px repeat(12,1fr)`;
+  let h=`<div style="display:grid;${gc};margin-bottom:6px"><div></div>${mn.map(m=>`<div style="font-family:var(--mono);font-size:8px;color:var(--text3);text-align:center">${m}</div>`).join('')}</div>`;
+  h+=`<div style="font-family:var(--mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;padding:4px 0 3px">Acquisition</div>`;
+  vecs.forEach((v,i)=>{
+    h+=`<div style="display:grid;${gc};margin-bottom:3px;align-items:center"><div style="font-size:9px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:6px">${v.name||'Campaign '+(i+1)}</div>`;
+    for(let m=0;m<12;m++){
+      h+=`<div style="height:18px;border-left:1px solid rgba(255,255,255,0.04);position:relative">`;
+      if(m===5)h+=`<div style="position:absolute;top:0;bottom:0;left:0;width:1px;background:rgba(255,255,255,0.25)"></div>`;
+      if(m===(i*2)%12){const w=Math.min(2,12-m);h+=`<div style="position:absolute;top:2px;bottom:2px;left:1px;width:calc(${w*100}% - 2px);background:${cols[i%5]};border:1px solid ${bds[i%5]};border-radius:2px"></div>`;}
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+  });
+  h+=`<div style="font-family:var(--mono);font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;padding:6px 0 3px">Retention</div>`;
+  h+=`<div style="display:grid;${gc};margin-bottom:3px;align-items:center"><div style="font-size:9px;color:var(--text2)">Email + community</div>`;
+  for(let m=0;m<12;m++){h+=`<div style="height:18px;border-left:1px solid rgba(255,255,255,0.04);position:relative">${m===5?'<div style="position:absolute;top:0;bottom:0;left:0;width:1px;background:rgba(255,255,255,0.25)"></div>':''}`+(m>=1?`<div style="position:absolute;top:2px;bottom:2px;left:1px;width:calc(100% - 2px);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:2px"></div>`:'')+'</div>';}
+  h+=`</div><div style="display:grid;${gc};margin-top:2px"><div></div>${mn.map((m,i)=>`<div style="font-family:var(--mono);font-size:8px;text-align:center;color:${i===5?'rgba(255,255,255,0.25)':'transparent'}">${i===5?'⚑':''}</div>`).join('')}</div>`;
+  g.innerHTML=h;
+}
+
+// ── S7 ──
+let s7sel=null;
+function s7Init(){
+  const vecs=gvecs();
+  const sys=S;
+  document.getElementById('s7-pat').textContent=patMap[sys.pat]||'—';
+  document.getElementById('s7-order').textContent=sys['s2-order-short']||sys['s2-order']||'—';
+  document.getElementById('s7-chaos').textContent=sys['s2-chaos-short']||sys['s2-chaos']||'—';
+  if(!vecs.length){document.getElementById('s7-empty').style.display='';document.getElementById('s7-content').style.display='none';return;}
+  document.getElementById('s7-empty').style.display='none';document.getElementById('s7-content').style.display='';
+  const briefs=gbriefs('s7');
+  document.getElementById('s7-vlist').innerHTML='<div class="vll">Campaigns</div>'+vecs.map((v,i)=>{
+    const b=briefs[i]||{};const ap=b.audit&&Object.keys(b.audit).length===5&&Object.values(b.audit).every(x=>x==='pass');
+    return`<div class="vi${s7sel===i?' act':''}" onclick="s7SelVec(${i})"><div class="vin">${String(i+1).padStart(2,'0')}${ap?' ✓':''}</div><div class="vim">${v.name||'Campaign '+(i+1)}</div><div class="viarc"><span class="viff">${v.from||'?'}</span><span style="font-size:9px;color:var(--text3);margin:0 3px">${v.from===v.to?'●':'→'}</span><span class="vift">${v.to||'?'}</span></div><div class="viper">${v.period||''}</div></div>`;
+  }).join('');
+  if(s7sel!==null)s7LoadBrief(s7sel);
+}
+function s7SelVec(i){s7sel=i;s7Init();document.getElementById('s7-empty-sel').style.display='none';document.getElementById('s7-brief').style.display='';s7LoadBrief(i);}
+function s7LoadBrief(i){
+  const b=(gbriefs('s7')[i])||{};
+  ['opening','closing','mechanic','aesthetic','format','never'].forEach(k=>{const el=document.getElementById('s7-'+k);if(el)el.value=b[k]||'';});
+  document.querySelectorAll('#s7-tgrid .tc').forEach(c=>c.classList.remove('sel'));
+  if(b.truth){const tc=document.querySelector('#s7-tgrid [data-t="'+b.truth+'"]');if(tc)tc.classList.add('sel');}
+  s7RenderAudit(i);
+}
+function s7SaveBF(key){
+  if(s7sel===null)return;const bs=gbriefs('s7');while(bs.length<=s7sel)bs.push({});
+  const el=document.getElementById('s7-'+key);if(el){bs[s7sel][key]=el.value;sbriefs('s7',bs);}s7Init();
+}
+function s7SelTruth(el){
+  if(s7sel===null)return;document.querySelectorAll('#s7-tgrid .tc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');
+  const bs=gbriefs('s7');while(bs.length<=s7sel)bs.push({});bs[s7sel].truth=el.dataset.t;sbriefs('s7',bs);s7Init();
+}
+function s7RenderAudit(i){
+  const audit=((gbriefs('s7')[i])||{}).audit||{};
+  for(let q=0;q<5;q++){const el=document.getElementById('s7-ac'+q);if(!el)return;const st=audit[q]||null;el.className='ach'+(st==='pass'?' pass':st==='fail'?' fail':'');el.textContent=st==='pass'?'✓':st==='fail'?'✕':'';}
+  const vals=Array.from({length:5},(_,q)=>audit[q]||null);const ans=vals.filter(v=>v).length;
+  const r=document.getElementById('s7-ar');if(!r)return;
+  if(ans<5){r.textContent=ans+' of 5 checked';r.className='ar';return;}
+  const ap=vals.every(v=>v==='pass');r.textContent=ap?'Passes constraint audit — approved to ship':'Fails constraint audit — do not ship';r.className='ar'+(ap?' pass':' fail');
+}
+function s7TogAudit(q){
+  if(s7sel===null)return;const bs=gbriefs('s7');while(bs.length<=s7sel)bs.push({});
+  if(!bs[s7sel].audit)bs[s7sel].audit={};const cur=bs[s7sel].audit[q]||null;
+  if(cur===null)bs[s7sel].audit[q]='pass';else if(cur==='pass')bs[s7sel].audit[q]='fail';else delete bs[s7sel].audit[q];
+  sbriefs('s7',bs);s7RenderAudit(s7sel);s7Init();
+}
+function s7ResetAudit(){if(s7sel===null)return;const bs=gbriefs('s7');if(bs[s7sel]){bs[s7sel].audit={};sbriefs('s7',bs);s7RenderAudit(s7sel);}}
+
+// ── S8 ──
+let s8sel=null;
+function s8Init(){
+  const vecs=gvecs();
+  document.getElementById('s8-vlist').innerHTML='<div class="vll">Campaigns</div>'+(vecs.length?vecs.map((v,i)=>{
+    const bs=gbriefs('s8');const b=bs[i]||{};const ap=b.audit&&Object.keys(b.audit).length===5&&Object.values(b.audit).every(x=>x==='pass');
+    return`<div class="vi${s8sel===i?' act':''}" onclick="s8SelVec(${i})"><div class="vin">${String(i+1).padStart(2,'0')}${ap?' ✓':''}</div><div class="vim">${v.name||'Campaign '+(i+1)}</div><div class="viarc"><span class="viff">${v.from||'?'}</span><span style="font-size:9px;color:var(--text3);margin:0 3px">${v.from===v.to?'●':'→'}</span><span class="vift">${v.to||'?'}</span></div></div>`;
+  }).join(''):'<div style="padding:14px 12px;font-size:10px;color:var(--text3)">Add vectors in step 6 first.</div>');
+}
+function s8SelVec(i){
+  s8sel=i;s8Init();const vecs=gvecs();const v=vecs[i]||{};
+  document.getElementById('s8-empty-sel').style.display='none';document.getElementById('s8-chain').style.display='';
+  document.getElementById('s8-vnum').textContent=String(i+1).padStart(2,'0');
+  document.getElementById('s8-vname').textContent=v.name||'Campaign '+(i+1);
+  document.getElementById('s8-vper').textContent=v.period||'';
+  document.getElementById('s8-vfrom').textContent=v.from||'?';
+  document.getElementById('s8-vto').textContent=v.to||'?';
+  document.getElementById('s8-vsep').textContent=v.from===v.to?'●':'→';
+  document.getElementById('s8-vint').textContent=v.intent||'';
+  const bs=gbriefs('s8');const b=bs[i]||{};
+  document.querySelectorAll('#s8-tgrid .tc').forEach(c=>c.classList.remove('sel'));
+  if(b.truthType){const tc=document.querySelector('#s8-tgrid [data-t="'+b.truthType+'"]');if(tc){tc.classList.add('sel');s8ShowMech(b.truthType);}}
+  else{document.getElementById('s8-mt').textContent='Select a truth type above';document.getElementById('s8-mb').textContent='The visual mechanic — the specific creative device that makes the truth visible — appears here. Not chosen. Derived.';}
+  ['opening','closing','truth','mechanic','aesthetic','never'].forEach(k=>{const el=document.getElementById('s8-'+k);if(el)el.value=b[k]||'';});
+  s8RenderAudit(i);document.getElementById('s8-right').scrollTop=0;
+}
+function s8ShowMech(t){const m=mechs[t];if(m){document.getElementById('s8-mt').textContent=m.t;document.getElementById('s8-mb').textContent=m.b;}}
+function s8SelTruth(el){
+  if(s8sel===null)return;document.querySelectorAll('#s8-tgrid .tc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');
+  s8ShowMech(el.dataset.t);const bs=gbriefs('s8');while(bs.length<=s8sel)bs.push({});bs[s8sel].truthType=el.dataset.t;sbriefs('s8',bs);s8Init();
+}
+function s8SaveBF(key){
+  if(s8sel===null)return;const bs=gbriefs('s8');while(bs.length<=s8sel)bs.push({});
+  const el=document.getElementById('s8-'+key);if(el){bs[s8sel][key]=el.value;sbriefs('s8',bs);}
+}
+function s8RenderAudit(i){
+  const audit=((gbriefs('s8')[i])||{}).audit||{};
+  for(let q=0;q<5;q++){const el=document.getElementById('s8-ac'+q);if(!el)return;const st=audit[q]||null;el.className='ach'+(st==='pass'?' pass':st==='fail'?' fail':'');el.textContent=st==='pass'?'✓':st==='fail'?'✕':'';}
+  const vals=Array.from({length:5},(_,q)=>audit[q]||null);const ans=vals.filter(v=>v).length;
+  const r=document.getElementById('s8-ar');if(!r)return;
+  if(ans<5){r.textContent=ans+' of 5 checked';r.className='ar';return;}
+  const ap=vals.every(v=>v==='pass');r.textContent=ap?'Passes constraint audit — approved to ship':'Fails constraint audit — do not ship';r.className='ar'+(ap?' pass':' fail');
+}
+function s8TogAudit(q){
+  if(s8sel===null)return;const bs=gbriefs('s8');while(bs.length<=s8sel)bs.push({});
+  if(!bs[s8sel].audit)bs[s8sel].audit={};const cur=bs[s8sel].audit[q]||null;
+  if(cur===null)bs[s8sel].audit[q]='pass';else if(cur==='pass')bs[s8sel].audit[q]='fail';else delete bs[s8sel].audit[q];
+  sbriefs('s8',bs);s8RenderAudit(s8sel);s8Init();
+}
+function s8ResetAudit(){if(s8sel===null)return;const bs=gbriefs('s8');if(bs[s8sel]){bs[s8sel].audit={};sbriefs('s8',bs);s8RenderAudit(s8sel);}}
+
+// ── S9 ──
+let s9sel=null;
+const s9layers=['l2','l3','l4','l5'];
+function s9GetD(i){try{const d=JSON.parse(localStorage.getItem('seed-s9')||'[]');return d[i]||{}}catch(e){return{}}}
+function s9SetD(i,d){try{const arr=JSON.parse(localStorage.getItem('seed-s9')||'[]');while(arr.length<=i)arr.push({});arr[i]=d;localStorage.setItem('seed-s9',JSON.stringify(arr));}catch(e){}}
+function s9Init(){
+  const vecs=gvecs();
+  document.getElementById('s9-vlist').innerHTML='<div class="vll">Campaigns</div>'+(vecs.length?vecs.map((v,i)=>{
+    const d=s9GetD(i);const done=s9layers.every(l=>(d.statuses||{})[l]==='pass');
+    return`<div class="vi${s9sel===i?' act':''}" onclick="s9SelVec(${i})"><div class="vin">${String(i+1).padStart(2,'0')}${done?' ✓':''}</div><div class="vim">${v.name||'Campaign '+(i+1)}</div><div class="viarc"><span class="viff">${v.from||'?'}</span><span style="font-size:9px;color:var(--text3);margin:0 3px">${v.from===v.to?'●':'→'}</span><span class="vift">${v.to||'?'}</span></div></div>`;
+  }).join(''):'<div style="padding:14px 12px;font-size:10px;color:var(--text3)">Add vectors in step 6 first.</div>');
+}
+function s9SelVec(i){
+  s9sel=i;s9Init();const vecs=gvecs();const v=vecs[i]||{};
+  document.getElementById('s9-empty').style.display='none';document.getElementById('s9-eco').style.display='';
+  document.getElementById('s9-pname').textContent=v.name||'Campaign '+(i+1);
+  document.getElementById('s9-pvec').textContent=(v.from||'?')+' → '+(v.to||'?');
+  const d=s9GetD(i);
+  s9layers.forEach(l=>{
+    const st=(d.statuses||{})[l]||null;const ln=l.slice(1);
+    const pp=document.getElementById('s9-'+l+'-pass');const pf=document.getElementById('s9-'+l+'-fail');
+    if(pp)pp.className='sb'+(st==='pass'?' sp':'');if(pf)pf.className='sb'+(st==='fail'?' sf':'');
+    const nf=document.getElementById('s9-n-'+l);if(nf)nf.value=(d.notes||{})[l]||'';
+  });
+  s9UpdateProg(d);document.getElementById('s9-right').scrollTop=0;
+}
+function togLayer(id){const b=document.getElementById('lb-'+id);const t=document.getElementById('lt-'+id);const o=b.classList.contains('open');b.classList.toggle('open',!o);if(t)t.style.transform=o?'':'rotate(180deg)';}
+function s9SetStatus(layer,status){
+  if(s9sel===null)return;const d=s9GetD(s9sel);if(!d.statuses)d.statuses={};
+  d.statuses[layer]=d.statuses[layer]===status?null:status;s9SetD(s9sel,d);
+  const pp=document.getElementById('s9-'+layer+'-pass');const pf=document.getElementById('s9-'+layer+'-fail');
+  if(pp)pp.className='sb'+(d.statuses[layer]==='pass'?' sp':'');if(pf)pf.className='sb'+(d.statuses[layer]==='fail'?' sf':'');
+  s9UpdateProg(d);s9Init();
+}
+function s9SaveNote(layer){
+  if(s9sel===null)return;const d=s9GetD(s9sel);if(!d.notes)d.notes={};
+  const el=document.getElementById('s9-n-'+layer);if(el){d.notes[layer]=el.value;s9SetD(s9sel,d);}
+}
+function s9UpdateProg(d){const done=s9layers.filter(l=>(d.statuses||{})[l]==='pass').length;const pf=document.getElementById('s9-prog');if(pf)pf.style.width=(done/s9layers.length*100)+'%';}
+
+// ── S10 ──
+let s10sel=null;
+function s10GetD(i){try{const d=JSON.parse(localStorage.getItem('seed-s10')||'[]');return d[i]||{}}catch(e){return{}}}
+function s10SetD(i,d){try{const arr=JSON.parse(localStorage.getItem('seed-s10')||'[]');while(arr.length<=i)arr.push({});arr[i]=d;localStorage.setItem('seed-s10',JSON.stringify(arr));}catch(e){}}
+function s10Init(){
+  const vecs=gvecs();
+  document.getElementById('s10-vlist').innerHTML='<div class="vll">Campaigns</div>'+(vecs.length?vecs.map((v,i)=>{
+    const d=s10GetD(i);const done=d.trigStatus==='met';
+    return`<div class="vi${s10sel===i?' act':''}" onclick="s10SelVec(${i})"><div class="vin">${String(i+1).padStart(2,'0')}${done?' ✓':''}</div><div class="vim">${v.name||'Campaign '+(i+1)}</div><div class="viarc"><span class="viff">${v.from||'?'}</span><span style="font-size:9px;color:var(--text3);margin:0 3px">${v.from===v.to?'●':'→'}</span><span class="vift">${v.to||'?'}</span></div></div>`;
+  }).join(''):'<div style="padding:14px 12px;font-size:10px;color:var(--text3)">Add vectors in step 6 first.</div>');
+}
+function s10SelVec(i){
+  s10sel=i;s10Init();const d=s10GetD(i);
+  document.getElementById('s10-empty').style.display='none';document.getElementById('s10-panel').style.display='';
+  ['roas','cac','ctr','st'].forEach(k=>{const el=document.getElementById('s10-'+k);if(el)el.value=d[k]||'';});
+  const p2n=document.getElementById('s10-p2notes');if(p2n)p2n.value=d.p2notes||'';
+  s10ApplyTrig(d.trigStatus||null);document.getElementById('s10-right').scrollTop=0;
+}
+function s10SaveT(key){if(s10sel===null)return;const d=s10GetD(s10sel);const el=document.getElementById('s10-'+key);if(el){d[key]=el.value;s10SetD(s10sel,d);}}
+function s10SetTrig(status){
+  if(s10sel===null)return;const d=s10GetD(s10sel);d.trigStatus=d.trigStatus===status?null:status;s10SetD(s10sel,d);
+  s10ApplyTrig(d.trigStatus);s10Init();
+}
+function s10ApplyTrig(status){
+  const bm=document.getElementById('s10-btn-met');const bn=document.getElementById('s10-btn-not');const sl=document.getElementById('s10-tgsl');const p2=document.getElementById('s10-p2box');
+  if(bm)bm.className='chkbtn'+(status==='met'?' met':'');
+  if(bn)bn.className='chkbtn'+(status==='not'?' notmet':'');
+  if(sl){if(status==='met'){sl.textContent='All conditions met — Phase 2 unlocked';sl.className='tgsl all';}else if(status==='not'){sl.textContent='Signal not yet met — diagnose before scaling';sl.className='tgsl some';}else{sl.textContent='Set targets above, then mark signal status';sl.className='tgsl';}}
+  if(p2)p2.className='p2box'+(status==='met'?' unlocked':'');
+}
+function s10SaveP2Notes(){if(s10sel===null)return;const d=s10GetD(s10sel);const el=document.getElementById('s10-p2notes');if(el){d.p2notes=el.value;s10SetD(s10sel,d);}}
+
+// ── S11 ──
+function s11Save(key){const el=document.getElementById('s11-'+key);if(el){try{const d=JSON.parse(localStorage.getItem('seed-s11')||'{}');d[key]=el.value;localStorage.setItem('seed-s11',JSON.stringify(d));}catch(e){}}}
+
+// ── INIT ──
+function loadAll(){
+  ['s1-notes','s4-notes','s5-notes','s6-arch','s6-ch','s6-prod','s6-trig'].forEach(k=>{const el=document.getElementById(k);if(el&&S[k])el.value=S[k];});
+  if(S.pat){document.querySelectorAll('.pc[data-p]').forEach(c=>{if(c.dataset.p===S.pat){c.classList.add('sel');document.getElementById('pat-eg').textContent=patEg[S.pat]||'';}});}
+  if(S.quad){document.querySelectorAll('.qc[data-q]').forEach(c=>{if(c.dataset.q===S.quad){c.classList.add('sel');c.style.borderWidth='1.5px';}});}
+  if(S.brand){document.getElementById('brand-display').textContent=S.brand;}
+  updateScope();renderVecs();updateDash();
+  stageInfo.forEach(function(si){var el=document.getElementById('nd-'+si.id);if(el)el.className='ndot'+(S['done-'+si.id]?' done':'');});
+  try{const d11=JSON.parse(localStorage.getItem('seed-s11')||'{}');['wd','wn','md','mn','qd','qn','lf','lc','lt','la','ld'].forEach(k=>{const el=document.getElementById('s11-'+k);if(el&&d11[k])el.value=d11[k];});}catch(e){}
+  initSecs();
+}
+loadAll();
+if(S['sidebarCollapsed']){document.querySelector('.app').classList.add('sidebar-collapsed');positionFixedBar();}
+</script>
+
+<!-- AI AGENT SIDEBAR -->
+<style>
+.agent-toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);background:var(--bg2);border:1px solid var(--border2);border-right:none;border-radius:var(--rl) 0 0 var(--rl);padding:12px 8px;cursor:pointer;z-index:200;transition:background 0.15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.agent-toggle:hover{background:var(--bg3)}
+.agent-toggle svg{width:16px;height:16px;color:var(--text2)}
+.agent-toggle span{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--text3);writing-mode:vertical-rl;text-transform:uppercase}
+@keyframes agent-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.agent-toggle.loading svg{animation:agent-spin 0.8s linear infinite;color:var(--text)}
+.agent-panel{position:fixed;right:0;top:0;bottom:0;width:360px;background:var(--bg2);border-left:1px solid var(--border);z-index:199;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.25s ease}
+.agent-panel.open{transform:translateX(0)}
+.agent-header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.agent-icon{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.agent-icon svg{width:14px;height:14px;color:var(--text2)}
+.agent-title{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.agent-stage-badge{font-family:var(--mono);font-size:9px;color:var(--text3);padding:2px 7px;border:1px solid var(--border);border-radius:10px}
+.agent-close{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:16px;line-height:1}
+.agent-close:hover{color:var(--text)}
+.agent-context{padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border);flex-shrink:0}
+.agent-context-label{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;margin-bottom:4px}
+.agent-context-text{font-size:10px;color:var(--text2);line-height:1.5}
+.agent-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.agent-messages::-webkit-scrollbar{width:3px}
+.agent-messages::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.msg{display:flex;flex-direction:column;gap:3px;max-width:100%}
+.msg-role{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;color:var(--text3);text-transform:uppercase}
+.msg-body{font-size:12px;line-height:1.6;color:var(--text2);background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px}
+.msg.user .msg-body{background:var(--bg);color:var(--text)}
+.msg.assistant .msg-body{background:var(--bg3)}
+.msg.thinking .msg-body{color:var(--text3);font-style:italic}
+.agent-input-area{padding:12px 14px;border-top:1px solid var(--border);flex-shrink:0}
+.agent-input-row{display:flex;gap:8px;align-items:flex-end}
+.agent-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--sans);font-size:12px;padding:8px 11px;outline:none;resize:none;min-height:38px;max-height:120px;transition:border-color 0.15s;line-height:1.5}
+.agent-input:focus{border-color:var(--border2)}
+.agent-send{background:var(--text);color:var(--bg);border:none;border-radius:var(--r);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity 0.15s}
+.agent-send:hover{opacity:0.85}
+.agent-send:disabled{opacity:0.3;cursor:not-allowed}
+.agent-send svg{width:14px;height:14px}
+.agent-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.agent-sug{font-size:10px;padding:4px 9px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--text3);cursor:pointer;transition:all 0.15s;font-family:var(--sans)}
+.agent-sug:hover{border-color:var(--border2);color:var(--text2)}
+</style>
+
+<div class="agent-toggle" id="agent-toggle" onclick="toggleAgent()">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+    <circle cx="8" cy="8" r="6"/>
+    <path d="M8 5v3l2 2"/>
+  </svg>
+  <span>Ask</span>
+</div>
+
+<div class="agent-panel" id="agent-panel">
+  <div class="agent-header">
+    <div class="agent-icon">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+        <circle cx="8" cy="8" r="6"/>
+        <path d="M6 9.5c0-1.5 4-1.5 4-3a2 2 0 10-4 0"/>
+        <circle cx="8" cy="11.5" r="0.5" fill="currentColor"/>
+      </svg>
+    </div>
+    <span class="agent-title">SEED assistant</span>
+    <span class="agent-stage-badge" id="agent-badge">Dashboard</span>
+    <button class="agent-close" onclick="toggleAgent()">×</button>
+  </div>
+  <div class="agent-context">
+    <div class="agent-context-label">Current context</div>
+    <div class="agent-context-text" id="agent-context-text">Ask anything about this stage or the SEED methodology.</div>
+  </div>
+  <div class="agent-messages" id="agent-messages">
+    <div class="msg assistant">
+      <div class="msg-role">Assistant</div>
+      <div class="msg-body">I know what stage you're on and what you've entered so far. Ask me anything — how to fill in a field, what a concept means, or whether your thinking is on track.</div>
+    </div>
+  </div>
+  <div class="agent-input-area">
+    <div class="agent-suggestions" id="agent-suggestions"></div>
+    <div class="agent-input-row">
+      <textarea class="agent-input" id="agent-input" placeholder="Ask something..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+      <button class="agent-send" id="agent-send" onclick="sendMsg()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2L2 7l5 3 3 5z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let agentOpen=false;
+let agentHistory=[];
+let currentStageId='dash';
+
+const stageSuggestions={
+  'dash':['What does SEED stand for?','How long does the full process take?','Where do I start?'],
+  's1':['How do I identify the pattern?','What is the difference between C→O and O→C?','What if the brand has multiple patterns?'],
+  's2':['How specific do the poles need to be?','Can Order and Chaos overlap?','What makes a good pole definition?'],
+  's3':['What comes first — brand book or creative strategy?','What goes in the positioning deck?','How long should the brand book take?'],
+  's4':['What if the client has partial pre-application work?','How do I handle existing brand guidelines?','What makes a client a good fit?'],
+  's5':['How do I choose between Organic First and Controlled Scale?','What if the budget is unclear?','Can the model change after launch?'],
+  's6':['How many campaigns should we plan for year one?','How do I set the phase trigger conditions?','What should the annual arc look like?'],
+  's7':['How do I derive the visual mechanic?','What format fits this vector?','What is a fixed-point campaign?'],
+  's8':['What is the difference between truth type and visual mechanic?','How do I know if the brief is correct?','What does the constraint audit actually check?'],
+  's9':['What is the difference between format adaptations and channel-native content?','When should we invest in BTS content?','How do we brief UGC?'],
+  's10':['What if only 3 of 4 trigger conditions are met?','How long should Phase 1 run before evaluating?','What does scale mean in practice?'],
+  's11':['What feeds forward into Campaign 2?','How often should we run the architecture review?','What if the constraint needs to change?']
+};
+
+const stageContexts={
+  'dash':'The dashboard — overview of all 11 stages and brand progress.',
+  's1':'Step 1 — Establishing the pattern. Identifying the generative constraint that governs all brand output.',
+  's2':'Step 2 — Defining the poles. Establishing exactly what Order and Chaos mean in this brand\'s specific world.',
+  's3':'Step 3 — Deriving the outputs. The brand book, creative strategy and positioning deck all flow from the constraint.',
+  's4':'Step 4 — Scope diagnostic. Mapping what the client already has against the full system.',
+  's5':'Step 5 — GTM model. Selecting the right budget and risk configuration for launch.',
+  's6':'Step 6 — Orchestrate. Building the GTM strategy deck and plotting the Gantt from the selected model.',
+  's7':'Step 7 — Creative production. Each campaign vector becomes a production brief.',
+  's8':'Step 8 — The brief. The full derivation chain from vector through truth type to constraint audit.',
+  's9':'Step 9 — Content ecosystem. One hero asset expressed across five layers of content.',
+  's10':'Step 10 — Scale. Phase trigger conditions and Phase 2 configuration.',
+  's11':'Step 11 — Measure and loop. Reporting cadence, loop back into architecture, learnings capture.'
+};
+
+function toggleAgent(){
+  agentOpen=!agentOpen;
+  document.getElementById('agent-panel').classList.toggle('open',agentOpen);
+  document.getElementById('agent-toggle').style.display=agentOpen?'none':'flex';
+  if(agentOpen)updateAgentContext();
+}
+
+function updateAgentContext(){
+  const badge=document.getElementById('agent-badge');
+  const ctx=document.getElementById('agent-context-text');
+  const sugs=document.getElementById('agent-suggestions');
+  badge.textContent=currentStageId==='dash'?'Dashboard':'Step '+currentStageId.replace('s','').padStart(2,'0');
+  ctx.textContent=stageContexts[currentStageId]||'Ask anything about this stage.';
+  const slist=stageSuggestions[currentStageId]||[];
+  sugs.innerHTML=slist.map(s=>`<button class="agent-sug" onclick="useSug(this)">${s}</button>`).join('');
+}
+
+function useSug(el){
+  document.getElementById('agent-input').value=el.textContent;
+  sendMsg();
+}
+
+function getStageData(){
+  const data={};
+  const sys=S||{};
+  data.brand=sys.brand||null;
+  data.category=sys.brandCat||null;
+  data.pattern=sys.pat||null;
+  data.orderPole=sys['s2-order-short']||sys['s2-order']||null;
+  data.chaosPole=sys['s2-chaos-short']||sys['s2-chaos']||null;
+  data.gtmModel=sys.quad||null;
+  if(currentStageId==='s6'){
+    data.vectors=gvecs();
+    data.campaignArch=sys['s6-arch']||null;
+  }
+  return data;
+}
+
+function buildSystemPrompt(){
+  const ctx=stageContexts[currentStageId]||'';
+  const data=getStageData();
+  const brandInfo=data.brand?`Brand: ${data.brand}${data.category?` (${data.category})`:''}.`:'No brand set yet.';
+  const patternInfo=data.pattern?`Pattern: ${data.pattern}.`:'Pattern not yet established.';
+  const polesInfo=data.orderPole?`Order: "${data.orderPole}". Chaos: "${data.chaosPole||'not defined'}".`:'Poles not yet defined.';
+  const gtmInfo=data.gtmModel?`GTM model: ${data.gtmModel}.`:'GTM model not yet selected.';
+
+  return`You are the SEED methodology assistant. SEED is a brand strategy system built on the premise that all brands follow a pattern between Order and Chaos. The methodology has 11 steps: 1) Discovery (the generative constraint), 2) Define the poles (what Order and Chaos mean for this brand), 3) Derive the outputs (brand book, creative strategy, positioning deck), 4) Scope diagnostic, 5) GTM model selection, 6) Orchestrate (GTM strategy deck + Gantt), 7) Creative production (campaign vector briefs), 8) The brief (full derivation chain + constraint audit), 9) Content ecosystem (5 layers), 10) Scale (phase trigger + Phase 2), 11) Measure and loop.
+
+Current context: ${ctx}
+
+Brand data entered so far:
+${brandInfo}
+${patternInfo}
+${polesInfo}
+${gtmInfo}
+
+Be concise and precise. Answer in 2-4 sentences unless a longer answer is genuinely needed. Never be vague. If the user's data is relevant to the question, reference it directly. If something is wrong or missing in their data, say so clearly.`;
+}
+
+async function sendMsg(){
+  const input=document.getElementById('agent-input');
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  input.style.height='auto';
+
+  addMsg('user',msg);
+  agentHistory.push({role:'user',content:msg});
+
+  const thinkEl=addMsg('assistant','Thinking...',true);
+  document.getElementById('agent-send').disabled=true;
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:buildSystemPrompt(),
+        messages:agentHistory.slice(-8)
+      })
+    });
+    const data=await res.json();
+    const reply=data.content&&data.content[0]&&data.content[0].text||'Sorry, I could not get a response.';
+    thinkEl.remove();
+    addMsg('assistant',reply);
+    agentHistory.push({role:'assistant',content:reply});
+    if(agentHistory.length>20)agentHistory=agentHistory.slice(-16);
+  }catch(e){
+    thinkEl.remove();
+    addMsg('assistant','Something went wrong. Please try again.');
+  }
+  document.getElementById('agent-send').disabled=false;
+}
+
+function addMsg(role,text,thinking=false){
+  const msgs=document.getElementById('agent-messages');
+  const div=document.createElement('div');
+  div.className='msg '+(thinking?'thinking':role);
+  div.innerHTML=`<div class="msg-role">${role==='user'?'You':'Assistant'}</div><div class="msg-body">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+
+// Hook into go() to update agent context when stage changes
+const _goOrig=window.go;
+window.go=function(id){
+  _goOrig(id);
+  currentStageId=id;
+  if(agentOpen)updateAgentContext();
+  const tog=document.getElementById('agent-toggle');
+  tog.classList.add('loading');
+  setTimeout(()=>tog.classList.remove('loading'),600);
+};
+
+// Auto-resize textarea
+document.getElementById('agent-input').addEventListener('input',function(){
+  this.style.height='auto';
+  this.style.height=Math.min(this.scrollHeight,120)+'px';
+});
+</script>
+</body>
+</html>
