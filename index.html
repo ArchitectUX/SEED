@@ -39,9 +39,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .sidebar-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0}
 .sidebar-brand{display:flex;align-items:center;gap:8px;padding:10px 20px 12px;cursor:pointer;transition:opacity 0.15s}
 .sidebar-brand:hover{opacity:0.8}
-.app.sidebar-collapsed{grid-template-columns:0 1fr}
-.app.sidebar-collapsed .sidebar{transform:translateX(-100%);position:absolute;pointer-events:none}
-.sidebar{transition:transform 0.25s ease}
+.app.sidebar-collapsed{grid-template-columns:0px 1fr}
+.sidebar{transition:width 0.25s ease,min-width 0.25s ease;min-width:var(--sidebar);overflow:hidden}
+.app.sidebar-collapsed .sidebar{min-width:0;width:0;border-right:none}
 /* SIDEBAR */
 .sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;height:100vh}
 .sidebar::-webkit-scrollbar{width:0}
@@ -438,12 +438,9 @@ select option{background:var(--bg3)}
 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
-  <!-- Logo + toggle -->
+  <!-- Logo -->
   <div class="sidebar-top">
     <span class="logo">SEED</span>
-    <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M6 2v12"/></svg>
-    </button>
   </div>
   <!-- Brand selector -->
   <div class="sidebar-brand" onclick="openModal()">
@@ -513,6 +510,9 @@ select option{background:var(--bg3)}
 
 <div class="main-wrap">
 <header class="header" id="topbar">
+  <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M6 2v12"/></svg>
+  </button>
   <span class="spill" id="sys-status">System incomplete</span>
 </header>
 <main class="main" id="main">
