@@ -21,7 +21,7 @@
   --r:8px;--rl:12px;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;overflow:hidden}
-.app{display:grid;grid-template-columns:var(--sidebar) 1fr;height:100vh}
+.app{display:grid;grid-template-columns:auto 1fr;height:100vh}
 /* HEADER */
 .header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--border);background:var(--bg);gap:14px;z-index:10;height:var(--header);flex-shrink:0}
 .logo{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:0.14em;color:var(--text)}
@@ -39,9 +39,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--s
 .sidebar-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0}
 .sidebar-brand{display:flex;align-items:center;gap:8px;padding:10px 20px 12px;cursor:pointer;transition:opacity 0.15s}
 .sidebar-brand:hover{opacity:0.8}
-.app.sidebar-collapsed{grid-template-columns:0px 1fr}
-.sidebar{transition:width 0.25s ease,min-width 0.25s ease;min-width:var(--sidebar);overflow:hidden}
-.app.sidebar-collapsed .sidebar{min-width:0;width:0;border-right:none}
+.sidebar{transition:width 0.25s ease;width:var(--sidebar);overflow:hidden;flex-shrink:0}
+.sidebar.collapsed{width:0;border-right:none}
 /* SIDEBAR */
 .sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;height:100vh}
 .sidebar::-webkit-scrollbar{width:0}
@@ -999,8 +998,8 @@ select option{background:var(--bg3)}
 })();
 
 function toggleSidebar(){
-  var app=document.querySelector('.app');
-  var collapsed=app.classList.toggle('sidebar-collapsed');
+  var sidebar=document.getElementById('sidebar');
+  var collapsed=sidebar.classList.toggle('collapsed');
   positionFixedBar();
   S['sidebarCollapsed']=collapsed;saveS();
 }
@@ -1610,7 +1609,7 @@ function loadAll(){
   initSecs();
 }
 loadAll();
-if(S['sidebarCollapsed']){document.querySelector('.app').classList.add('sidebar-collapsed');positionFixedBar();}
+if(S['sidebarCollapsed']){var sb=document.getElementById('sidebar');if(sb)sb.classList.add('collapsed');positionFixedBar();}
 </script>
 
 <!-- AI AGENT SIDEBAR -->
